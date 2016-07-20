@@ -106,7 +106,7 @@ in Figure \[fig:hssa\_segmentation\].
 
 ![<span style="font-variant:small-caps;">hssa</span> segmentation
 process. Black areas present *homogenous* frames.<span
-data-label="fig:hssa_segmentation"></span>](hssa_segmentation_5){width="\textwidth"}
+data-label="fig:hssa_segmentation"></span>](figures/hssa_segmentation.gif)
 
 ### Homogeneity measure
 
