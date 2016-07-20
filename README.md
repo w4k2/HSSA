@@ -8,7 +8,7 @@ The <span style="font-variant:small-caps;">hssa</span> is a two-staged
 segmentation tool for <span style="font-variant:small-caps;">hs</span>
 images. It is based on consecutive division of image to decompose it into a set of homogenous segments. Later, according to labels assigned by an expert, the representation is prepared as an input for classification methods.
 
-The method was inspired by the *quad trees* @mango, which are a class of
+The method was inspired by the *quad trees*, which are a class of
 hierarchical data structures, based on regular decomposition. The base
 image is decomposed here by splitting it by each spatial dimension into
 four non-overlapping subregions of equal size, repetitively, until
@@ -66,6 +66,7 @@ enough to create pseudocode of <span
 style="font-variant:small-caps;">hssa</span>, presented in Algorithm
 \[alg:hssa\].
 
+<!---
 \[!ht\]
 
 \[1\] $heterogenous\gets image$\[alg:hssa\_init\] $homogenous\gets [\;]$
@@ -74,35 +75,32 @@ $frame.homogeneity = homogeneity(frame)$\[alg:hssa\_homo\_calc\]
 \[alg:hssa\_threshold\] $homogenous\gets homogenous + frame$
 $heterogenous\gets heterogenous - frame$ \[alg:hssa\_end\] **break**
 $split(frame)$\[alg:hssa\_divide\]
+--->
 
 The algorithm receives the following input parameters:
 
--   $image$ — *hyperspectral* image data,
+-   _image_ — *hyperspectral* image data,
 
--   $threshold$ — lowest acceptable value of homogeneity which is used
+-   _threshold_ — lowest acceptable value of homogeneity which is used
     for determining homogenous regions.
 
--   $maxFold$ — maximum number of loops,
+-   _maxFold_ — maximum number of loops,
 
 The initialization procedure creates a single frame for the entire
-image, and its representative vector is added to the heterogeneous list
-(line \[alg:hssa\_init\]). Every iteration calculates the mean signature
-(line \[alg:hssa\_mean\_calc\]) and homogeneity measure (line
-\[alg:hssa\_homo\_calc\]) for all frames in *heterogeneous* list. If the
-measure of the given frame reaches $threshold$ (line
-\[alg:hssa\_threshold\]), it is assessed as homogeneous and moved to the
+image, and its representative vector is added to the heterogeneous list. Every iteration calculates the mean signature and homogeneity measure for all frames in *heterogeneous* list. If the
+measure of the given frame reaches _threshold_, it is assessed as homogeneous and moved to the
 *homogeneous* list. The end of a main loop divides *heterogenous* frames
-into smaller ones (line \[alg:hssa\_divide\]).
+into smaller ones.
 
 Procedure breaks when any of the following statements is satisfied:
 
--   *heterogeneous* list becomes empty (line \[alg:hssa\_end\]),
+-   *heterogeneous* list becomes empty,
 
--   number of proceeded loops exceeds the $maxFold$.
+-   number of proceeded loops exceeds the _maxFold_.
 
 Areas covered by *homogeneous* (black) and *heterogeneous* (white)
 frames for *Salinas* dataset, according to loop iterations are presented
-in Figure \[fig:hssa\_segmentation\].
+in animation below.
 
 ![<span style="font-variant:small-caps;">hssa</span> segmentation
 process. Black areas present *homogenous* frames.<span
@@ -117,6 +115,7 @@ style="font-variant:small-caps;">hs</span> images definitely belongs to
 this class) it is necessary to provide accordingly more complex method
 to calculate this property (Algorithm \[alg:hssa\_homogeneity\]).
 
+<!---
 \[!ht\]
 
 \[1\]
@@ -128,22 +127,19 @@ $accumulator\gets accumulator + frame.pixels[x'+x'',y'+y'']$\[alg:hssa\_homogene
 $bubble \gets mean(accumulator)$ $bubbles\gets bubbles + bubble$
 **return** $max(distance(bubbles, meanSignature))$
 \[alg:hssa\_homogeneity\_4\]
+--->
 
 Proposition is to:
 
 -   Calculate the regions signature as the mean of all its pixel
-    signatures (line \[alg:hssa\_homogeneity\_1\]).
-
--   Establish $3$x$3$ grid on the image, to select 4 pixels on each
-    crossing of grid lines (line \[alg:hssa\_homogeneity\_2\]).
-
+    signatures.
+-   Establish `3x3` grid on the image, to select 4 pixels on each
+    crossing of grid lines.
 -   Calculate the average signature for nearest neighborhood (in the
     radius of 5 pixels, which is here called a bubble) of each selected
-    pixel (line \[alg:hssa\_homogeneity\_3\]).
-
+    pixel.
 -   The largest euclidean distance between mean signature of whole frame
-    and four bubbles is returned as the homogeneity measure
-    (line \[alg:hssa\_homogeneity\_4\]).
+    and four bubbles is returned as the homogeneity measure.
 
 Threshold of homogeneity should be provided by the user by tuning it to
 the specific problem. For all later experiments, this parameter was set
