@@ -186,13 +186,3 @@ develop three versions of the segment representations:
 It should be emphasized, that *all propositions require the human expert
 to label each segment only once*. The label assigned to a particular
 segment is then propagated to all samples which belong to it.
-
-### Implementation
-
-The <span style="font-variant:small-caps;">hssa</span> was implemented
-as a script in the pure <span
-style="font-variant:small-caps;">matlab</span> language, without usage
-of any additional *toolboxes*.
-
-Its full code and documentation is available at
-<https://github.com/w4k2/hssa>.
