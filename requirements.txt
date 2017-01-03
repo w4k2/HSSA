@@ -1,0 +1,8 @@
+nose
+pypng
+enum
+pycco
+numpy
+coverage
+ksskml
+codeclimate-test-reporter
