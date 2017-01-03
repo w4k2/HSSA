@@ -1,7 +1,7 @@
 from hssa import *
 
 import numpy as np
-
+import json
 
 def blue():
     return "\033[92m"
@@ -10,18 +10,27 @@ def blue():
 def endcolor():
     return '\033[0m'
 
+def loadImage():
+    with open('salinasA.json') as data_file:
+        dictionary = json.load(data_file)
+
+    return HS(dictionary)
 
 def test_loading():
     """Is image loading?"""
-    hs = HS(
-        ('data/SalinasA.mat', 'salinasA_corrected'),
-        ('data/SalinasA_gt', 'salinasA_gt'))
+    hs = loadImage()
+    print hs
     assert 1 == 1
 
 def test_signature():
     """Do we receive signatures?"""
-    hs = HS(
-        ('data/SalinasA.mat', 'salinasA_corrected'),
-        ('data/SalinasA_gt', 'salinasA_gt'))
+    hs = loadImage()
     signature = hs.signature(10,10)
     assert len(signature) == hs.bands
+
+
+def test_signatures():
+    """Are we able to summary classes?"""
+    hs = loadImage()
+    signatures = hs.signatures()
+    print np.shape(signatures)
