@@ -6,3 +6,4 @@ numpy
 coverage
 ksskml
 codeclimate-test-reporter
+scipy
