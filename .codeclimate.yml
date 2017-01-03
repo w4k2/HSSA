@@ -10,7 +10,9 @@ engines:
   fixme:
     enabled: true
   radon:
-    enabled: true
+      enabled: true
+      exclude_fingerprints:
+      - 167bb9772249e42d4f262dd4af72b620
 ratings:
   paths:
   - "**.py"
