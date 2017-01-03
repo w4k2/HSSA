@@ -23,8 +23,10 @@ class HS:
             self.bands)
 
     def signature(self, row, col):
-        signature = self.image[row][col]
-        return signature
+        return np.copy(self.image[row,col])
+
+    def slice(self, band):
+        return np.copy(self.image[:,:,band])
 
     def signatures(self):
         labels = np.max(self.gt) + 1
