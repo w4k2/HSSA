@@ -1,0 +1,13 @@
+language: python
+python:
+  - "2.7"
+# command to install dependencies
+install: "pip install -r requirements.txt"
+# command to run tests
+script: make test
+sudo: required
+git:
+  depth: 1
+notifications:
+  email: false
+  slack: w4k2:hi4RvyZzus4WXE7Ea5XufyBU
