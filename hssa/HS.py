@@ -4,8 +4,9 @@ import numpy as np
 class HS:
     def __init__(self, dictionary):
         # Loading image and ground truth
-        self.image = scipy.io.loadmat(dictionary['image'][0])[dictionary['image'][1]]
-        self.gt = scipy.io.loadmat(dictionary['gt'][0])[dictionary['gt'][1]]
+
+        self.image = self.loadMatFromTuple(dictionary['image'])
+        self.gt = self.loadMatFromTuple(dictionary['gt'])
 
         # Getting in shape
         shape = np.shape(self.image)
@@ -14,6 +15,9 @@ class HS:
         self.bands = shape[2]
         self.name = dictionary['name']
         self.classes = dictionary['classes']
+
+    def loadMatFromTuple(self, entry):
+        return scipy.io.loadmat(entry[0])[entry[1]]
 
     def __str__(self):
         return '%s image, %i classes, %i samples of %i bands' % (

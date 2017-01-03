@@ -19,8 +19,7 @@ def loadImage():
 def test_loading():
     """Is image loading?"""
     hs = loadImage()
-    print hs
-    assert 1 == 1
+    assert 'Salinas A image, 7 classes, 7138 samples of 204 bands' == str(hs)
 
 def test_signature():
     """Do we receive signatures?"""
@@ -38,4 +37,4 @@ def test_signatures():
     """Are we able to summary classes?"""
     hs = loadImage()
     signatures = hs.signatures()
-    print np.shape(signatures)
+    assert (len(hs.classes), hs.bands) == np.shape(signatures)
