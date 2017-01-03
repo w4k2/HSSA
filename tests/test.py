@@ -11,5 +11,8 @@ def endcolor():
     return '\033[0m'
 
 
-def test_exposer():
+def test_hssa():
+    hssa = HSSA(
+        ('data/SalinasA.mat', 'salinasA_corrected'),
+        ('data/SalinasA_gt', 'salinasA_gt'))
     assert 1 == 1
