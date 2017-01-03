@@ -12,7 +12,7 @@ engines:
   radon:
       enabled: true
       exclude_fingerprints:
-      - 167bb9772249e42d4f262dd4af72b620
+      - 6712dc780f17ef0aef1d502570c70e9a
 ratings:
   paths:
   - "**.py"
