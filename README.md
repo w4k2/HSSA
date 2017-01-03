@@ -1,4 +1,4 @@
-HSSA — *Hyperspectral Segmentation Algorithm*
+HSSA — *Hyperspectral Segmentation Algorithm* [![Code Climate](https://codeclimate.com/github/w4k2/HSSA/badges/gpa.svg)](https://codeclimate.com/github/w4k2/HSSA)
 =============================================
 
 Conception
@@ -44,7 +44,7 @@ vectors consisting of two parts:
 -   Mean signature of the pixels inside the frame.
 
 
- 
+
 | col. | parameter| description|
 |---|---|---|
 |1|`fold`|Number of iteration in which segment was created|
