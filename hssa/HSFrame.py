@@ -6,7 +6,7 @@ SEED = 123
 random.seed(SEED)
 
 class HSFrame:
-    def __init__(self, hs, points = 30):
+    def __init__(self, hs, points = 250):
         # Get amount of points to create mean signature
         self.points = points
         # Assign image
@@ -46,7 +46,6 @@ class HSFrame:
         return {'top': top, 'left': left, 'width': width, 'height': height}
 
     def calculate(self):
-        print 'Calculating signature'
         # Getting window parameters
         width = self.window['width']
         height = self.window['height']
@@ -66,6 +65,8 @@ class HSFrame:
             signatures.append(signature)
             # print '%03i - %05i - %02i:%02i' % (item, index, x, y)
         self.signature = np.mean(signatures, axis=0)
+        # homogeneity as a mean standardDeviation
+        self.homogeneity = np.mean(np.std(signatures, axis=0)) / self.hs.max
 
     def __str__(self):
         return "F%i|L%i|S%i|L%i|H%.3f" % (self.fold, self.location, self.segment, self.label, self.homogeneity)

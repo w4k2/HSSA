@@ -54,3 +54,12 @@ def test_hssa_frame_signature():
     hssa = HSSA(hs, threshold, limit)
     frame = hssa.heterogenous[0]
     assert len(frame.signature) == hs.bands
+
+def test_hssa_frame_signature():
+    """Can we establish homogeneity measure?"""
+    hs = loadImage()
+    threshold = .5
+    limit = 3
+    hssa = HSSA(hs, threshold, limit)
+    frame = hssa.heterogenous[0]
+    assert frame.homogeneity > 0 and frame.homogeneity < 1

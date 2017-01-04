@@ -4,9 +4,11 @@ import numpy as np
 class HS:
     def __init__(self, dictionary):
         # Loading image and ground truth
-
         self.image = self.loadMatFromTuple(dictionary['image'])
         self.gt = self.loadMatFromTuple(dictionary['gt'])
+
+        # Searching for maximum
+        self.max = np.amax(self.image)
 
         # Getting in shape
         shape = np.shape(self.image)
