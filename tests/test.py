@@ -45,3 +45,12 @@ def test_hssa_init():
     threshold = .5
     limit = 3
     hssa = HSSA(hs, threshold, limit)
+
+def test_hssa_frame_signature():
+    """Can we establish frame signature?"""
+    hs = loadImage()
+    threshold = .5
+    limit = 3
+    hssa = HSSA(hs, threshold, limit)
+    frame = hssa.heterogenous[0]
+    assert len(frame.signature) == hs.bands
