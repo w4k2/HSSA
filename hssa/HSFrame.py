@@ -3,7 +3,7 @@ import numpy as np
 
 class HSFrame:
     def __init__(self, hs):
-        # Assign image
+        # Assign image 
         self.hs = hs
         # iteration, when segment was created
         self.fold = 0
