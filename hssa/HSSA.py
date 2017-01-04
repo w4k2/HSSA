@@ -30,14 +30,16 @@ class HSSA:
                 break
             self.step()
 
-    def step(self):
-        self.iteration += 1
-
+    def split(self):
         # Splitting
         self.homogenous.extend(
             [x for x in self.heterogenous if x.homogeneity > self.threshold])
         self.heterogenous = \
             [x for x in self.heterogenous if x.homogeneity <= self.threshold]
+
+    def step(self):
+        self.iteration += 1
+        self.split()
         self.isComplete = len(self.heterogenous) == 0
 
         # Breaking hetero
