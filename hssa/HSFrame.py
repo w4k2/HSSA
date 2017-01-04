@@ -2,7 +2,9 @@ import scipy.io
 import numpy as np
 
 class HSFrame:
-    def __init__(self):
+    def __init__(self, hs):
+        # Assign image
+        self.hs = hs
         # iteration, when segment was created
         self.fold = 0
         # unique frame identifier
