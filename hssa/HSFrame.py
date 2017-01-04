@@ -5,8 +5,9 @@ import random
 SEED = 123
 random.seed(SEED)
 
+
 class HSFrame:
-    def __init__(self, hs, points = 250, fold = 0, location = 0):
+    def __init__(self, hs, points=250, fold=0, location=0):
         # Get amount of points to create mean signature
         self.points = points
         # Assign image
@@ -31,26 +32,30 @@ class HSFrame:
 
     def divide(self):
         # Bases
-        base = pow(2,self.fold)
-        newBase = pow(2,self.fold + 1)
+        base = pow(2, self.fold)
+        newBase = pow(2, self.fold + 1)
 
         # Counting overlines
         overlines = self.location / base
 
         # Establishing start
-        x = 2 * ( self.location + self.location / base * base )
+        x = 2 * (self.location + self.location / base * base)
 
         # Creating new frames
         frames = []
-        frames.append(HSFrame(self.hs, self.points, self.fold + 1, x))
-        frames.append(HSFrame(self.hs, self.points, self.fold + 1, x + 1))
-        frames.append(HSFrame(self.hs, self.points, self.fold + 1, x + newBase))
-        frames.append(HSFrame(self.hs, self.points, self.fold + 1, x + newBase + 1))
+        frames.append(
+            HSFrame(self.hs, self.points, self.fold + 1, x))
+        frames.append(
+            HSFrame(self.hs, self.points, self.fold + 1, x + 1))
+        frames.append(
+            HSFrame(self.hs, self.points, self.fold + 1, x + newBase))
+        frames.append(
+            HSFrame(self.hs, self.points, self.fold + 1, x + newBase + 1))
         return frames
 
     def window(self):
         # Getting base
-        base = pow(2,self.fold)
+        base = pow(2, self.fold)
 
         # Calculating size
         width = int(self.hs.cols / base)
@@ -85,7 +90,13 @@ class HSFrame:
             # print '%03i - %05i - %02i:%02i' % (item, index, x, y)
         self.signature = np.mean(signatures, axis=0)
         # homogeneity as a mean standardDeviation
-        self.homogeneity = 1 - (np.mean(np.std(signatures, axis=0)) / self.hs.max)
+        self.homogeneity = \
+            1 - (np.mean(np.std(signatures, axis=0)) / self.hs.max)
 
     def __str__(self):
-        return "F%i|L%i|S%i|L%i|H%.3f" % (self.fold, self.location, self.segment, self.label, self.homogeneity)
+        return "F%i|L%i|S%i|L%i|H%.3f" % (
+            self.fold,
+            self.location,
+            self.segment,
+            self.label,
+            self.homogeneity)

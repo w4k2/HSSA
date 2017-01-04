@@ -1,6 +1,7 @@
 import scipy.io
 import numpy as np
 
+
 class HS:
     def __init__(self, dictionary):
         # Loading image and ground truth
@@ -29,10 +30,10 @@ class HS:
             self.bands)
 
     def signature(self, row, col):
-        return np.copy(self.image[row,col])
+        return np.copy(self.image[row, col])
 
     def slice(self, band):
-        return np.copy(self.image[:,:,band])
+        return np.copy(self.image[:, :, band])
 
     def signatures(self):
         labels = np.max(self.gt) + 1
@@ -42,7 +43,7 @@ class HS:
             for x, row in enumerate(self.gt):
                 for y, value in enumerate(row):
                     if value == label:
-                        stack.append(self.signature(x,y))
+                        stack.append(self.signature(x, y))
             if len(stack) != 0:
                 signature = np.mean(stack, 0)
                 signatures.append(signature)

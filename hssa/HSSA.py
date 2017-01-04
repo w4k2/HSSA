@@ -4,6 +4,7 @@ import numpy as np
 from HS import *
 from HSFrame import *
 
+
 class HSSA:
     def __init__(self, hs, threshold, limit):
         # Assign image
@@ -33,10 +34,11 @@ class HSSA:
         self.iteration += 1
 
         # Splitting
-        self.homogenous.extend([x for x in self.heterogenous if x.homogeneity > self.threshold])
-        self.heterogenous = [x for x in self.heterogenous if x.homogeneity <= self.threshold]
-        if len(self.heterogenous) == 0:
-            self.isComplete = True
+        self.homogenous.extend(
+            [x for x in self.heterogenous if x.homogeneity > self.threshold])
+        self.heterogenous = \
+            [x for x in self.heterogenous if x.homogeneity <= self.threshold]
+        self.isComplete = len(self.heterogenous) == 0
 
         # Breaking hetero
         newHeterogenous = []
