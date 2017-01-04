@@ -82,3 +82,25 @@ def test_is_dividing_working():
         for nFrame in newestFrames:
             thirdStageLocations.append(nFrame.location)
     assert sorted(thirdStageLocations) == list(xrange(0,64))
+
+def test_dumb_hssa():
+    """Is HSSA working?"""
+    hs = loadImage()
+    threshold = .98
+    limit = 2
+    hssa = HSSA(hs, threshold, limit)
+    while not hssa.isComplete:
+        hssa.step()
+
+    assert len(hssa.homogenous) > 0 and len(hssa.heterogenous) == 0
+
+
+def test_limit_hssa():
+    """Is HSSA working with limits?"""
+    hs = loadImage()
+    threshold = .98
+    limit = 4
+    hssa = HSSA(hs, threshold, limit)
+    hssa.process()
+
+    assert len(hssa.homogenous) > 0 and len(hssa.heterogenous) > 0

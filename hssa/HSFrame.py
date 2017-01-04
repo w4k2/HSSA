@@ -35,12 +35,10 @@ class HSFrame:
         newBase = pow(2,self.fold + 1)
 
         # Counting overlines
-        overlines = int(self.location / base)
+        overlines = self.location / base
 
         # Establishing start
-        # x = self.location * 2 + overlines * newBase
-        # x = 2 * self.location + 2 * overlines * base
-        x = 2 * ( self.location + overlines * base )
+        x = 2 * ( self.location + self.location / base * base )
 
         # Creating new frames
         frames = []
@@ -87,7 +85,7 @@ class HSFrame:
             # print '%03i - %05i - %02i:%02i' % (item, index, x, y)
         self.signature = np.mean(signatures, axis=0)
         # homogeneity as a mean standardDeviation
-        self.homogeneity = np.mean(np.std(signatures, axis=0)) / self.hs.max
+        self.homogeneity = 1 - (np.mean(np.std(signatures, axis=0)) / self.hs.max)
 
     def __str__(self):
         return "F%i|L%i|S%i|L%i|H%.3f" % (self.fold, self.location, self.segment, self.label, self.homogeneity)
