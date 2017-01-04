@@ -6,15 +6,15 @@ SEED = 123
 random.seed(SEED)
 
 class HSFrame:
-    def __init__(self, hs, points = 250):
+    def __init__(self, hs, points = 250, fold = 0, location = 0):
         # Get amount of points to create mean signature
         self.points = points
         # Assign image
         self.hs = hs
         # iteration, when segment was created
-        self.fold = 0
+        self.fold = fold
         # iteration based frame location
-        self.location = 0
+        self.location = location
         # segment identifier, resulting from the merging procedure
         self.segment = -1
         # class label given by the expert for region
@@ -28,6 +28,27 @@ class HSFrame:
         # Fill
         self.window = self.window()
         self.calculate()
+
+    def divide(self):
+        # Bases
+        base = pow(2,self.fold)
+        newBase = pow(2,self.fold + 1)
+
+        # Counting overlines
+        overlines = int(self.location / base)
+
+        # Establishing start
+        # x = self.location * 2 + overlines * newBase
+        # x = 2 * self.location + 2 * overlines * base
+        x = 2 * ( self.location + overlines * base )
+
+        # Creating new frames
+        frames = []
+        frames.append(HSFrame(self.hs, self.points, self.fold + 1, x))
+        frames.append(HSFrame(self.hs, self.points, self.fold + 1, x + 1))
+        frames.append(HSFrame(self.hs, self.points, self.fold + 1, x + newBase))
+        frames.append(HSFrame(self.hs, self.points, self.fold + 1, x + newBase + 1))
+        return frames
 
     def window(self):
         # Getting base

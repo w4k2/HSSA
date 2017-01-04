@@ -63,3 +63,22 @@ def test_hssa_frame_signature():
     hssa = HSSA(hs, threshold, limit)
     frame = hssa.heterogenous[0]
     assert frame.homogeneity > 0 and frame.homogeneity < 1
+
+def test_is_dividing_working():
+    """Can we divide a frame properly?"""
+    hs = loadImage()
+    threshold = .5
+    limit = 3
+    hssa = HSSA(hs, threshold, limit)
+    frame = hssa.heterogenous[0]
+
+    thirdStageLocations = []
+    newFrames = frame.divide()
+    newerFrames = []
+    for frame in newFrames:
+        newerFrames.extend(frame.divide())
+    for frame in newerFrames:
+        newestFrames = frame.divide()
+        for nFrame in newestFrames:
+            thirdStageLocations.append(nFrame.location)
+    assert sorted(thirdStageLocations) == list(xrange(0,64))
