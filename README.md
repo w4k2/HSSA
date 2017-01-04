@@ -1,5 +1,6 @@
-HSSA — *Hyperspectral Segmentation Algorithm* [![Build Status](https://travis-ci.org/w4k2/HSSA.svg?branch=master)](https://travis-ci.org/w4k2/HSSA) [![Code Climate](https://codeclimate.com/github/w4k2/HSSA/badges/gpa.svg)](https://codeclimate.com/github/w4k2/HSSA)
-=============================================
+# HSSA — *Hyperspectral Segmentation Algorithm*
+
+[![Build Status](https://travis-ci.org/w4k2/HSSA.svg?branch=master)](https://travis-ci.org/w4k2/HSSA) [![Code Climate](https://codeclimate.com/github/w4k2/HSSA/badges/gpa.svg)](https://codeclimate.com/github/w4k2/HSSA) [![Issue Count](https://codeclimate.com/github/w4k2/HSSA/badges/issue_count.svg)](https://codeclimate.com/github/w4k2/HSSA)
 
 Conception
 ----------
