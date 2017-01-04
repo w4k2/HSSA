@@ -22,7 +22,7 @@ exclude_paths:
 - vapor/
 - figures/
 - images/
-- *.json
-- *.md
-- *.txt
-- *.xml
+- **.json
+- **.md
+- **.txt
+- **.xml
