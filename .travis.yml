@@ -9,6 +9,7 @@ sudo: required
 git:
   depth: 1
 notifications:
+  slack: w4k2:ConwGn3rF3PluRI1BqiCwO3N
   email:
     on_failure: never
     on_success: never
