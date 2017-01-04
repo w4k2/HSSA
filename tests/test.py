@@ -38,3 +38,10 @@ def test_signatures():
     hs = loadImage()
     signatures = hs.signatures()
     assert (len(hs.classes), hs.bands) == np.shape(signatures)
+
+def test_hssa_init():
+    """Can we create HSSA?"""
+    hs = loadImage()
+    threshold = .5
+    limit = 3
+    hssa = HSSA(hs, threshold, limit)
