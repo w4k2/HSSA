@@ -1,6 +1,7 @@
 import scipy.io
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
+import matplotlib.colors as colors
 import numpy as np
 
 from HS import *
@@ -19,6 +20,8 @@ class HSSA:
         self.iteration = 0
         # Is done?
         self.isComplete = False
+        # segments count
+        self.segments = 0
 
         # Initialize set of frames
         self.heterogenous = []
@@ -27,7 +30,7 @@ class HSSA:
         self.clean()
 
     def image(self):
-        base = 512
+        base = pow(2, self.iteration)
         img = np.ones((base, base, 3))
         minN = 9999
         maxN = 0
@@ -43,16 +46,19 @@ class HSSA:
             length = base / amount
             intensity = (frame.intensity - minN) / (maxN - minN)
             intensity = .25 + intensity / 2
+            hue = 0
+            if frame.isHomo:
+                hue = frame.segment / float(self.segments)
             x = frame.location % amount
             y = frame.location / amount
             for i in xrange(length):
                 for j in xrange(length):
                     if frame.isHomo:
-                        img[length * x + i, length * y + j] = [
-                            intensity, 0, 0]
+                        img[length * x + i, length * y + j] = \
+                            colors.hsv_to_rgb([hue, 1, .5 + intensity / 2])
                     else:
-                        img[length * x + i, length * y + j] = [
-                            intensity, intensity, intensity]
+                        img[length * x + i, length * y + j] = \
+                            colors.hsv_to_rgb([0, 0, intensity])
 
         imgplot = plt.imshow(img, interpolation="nearest")
         plt.savefig('hssa_i%i_t%.0f.png' % (
@@ -72,9 +78,28 @@ class HSSA:
         self.heterogenous = \
             [x for x in self.heterogenous if x.homogeneity <= self.threshold]
 
+    def merge(self):
+        for i in xrange(len(self.homogenous)):
+            frame = self.homogenous[i]
+            if frame.segment == -1:
+                for j in xrange(i):
+                    cmpFrame = self.homogenous[j]
+                    similarity = \
+                        1 - (np.mean(np.std([frame.signature, cmpFrame.signature], axis=0)) / self.hs.max)
+                    if similarity > self.threshold:
+                        frame.segment = cmpFrame.segment
+                        break
+                if frame.segment == -1:
+                    frame.segment = self.segments
+                    self.segments += 1
+        # print '# SHOWING SEGMENTS'
+        # for frame in self.homogenous:
+        #     print frame
+
     def step(self):
         self.iteration += 1
         self.split()
+        self.merge()
         for frame in self.homogenous:
             frame.isHomo = True
         self.isComplete = len(self.heterogenous) == 0
