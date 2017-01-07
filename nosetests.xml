@@ -1,2 +1,14 @@
-<?xml version="1.0" encoding="UTF-8"?><testsuite name="nosetests" tests="9" errors="0" failures="0" skip="0"><testcase classname="test" name="test_loading" time="1.493"></testcase><testcase classname="test" name="test_signature" time="1.489"></testcase><testcase classname="test" name="test_slice" time="1.440"></testcase><testcase classname="test" name="test_hssa_init" time="1.457"></testcase><testcase classname="test" name="test_hssa_frame_signature" time="1.425"><system-out><![CDATA[F0|L0|S-1|L-1|H0.956
-]]></system-out></testcase><testcase classname="test" name="test_hssa_homogeneity_measure" time="1.382"></testcase><testcase classname="test" name="test_is_dividing_working" time="1.801"></testcase><testcase classname="test" name="test_dumb_hssa" time="11.838"></testcase><testcase classname="test" name="test_limit_hssa" time="2.332"></testcase></testsuite>
+<?xml version="1.0" encoding="UTF-8"?><testsuite name="nosetests" tests="10" errors="0" failures="0" skip="0"><testcase classname="test" name="test_loading" time="1.349"></testcase><testcase classname="test" name="test_signature" time="1.340"></testcase><testcase classname="test" name="test_slice" time="1.348"></testcase><testcase classname="test" name="test_hssa_init" time="1.510"></testcase><testcase classname="test" name="test_hssa_frame_signature" time="1.413"><system-out><![CDATA[F0|L0|S-1|L-1|H0.956
+]]></system-out></testcase><testcase classname="test" name="test_hssa_homogeneity_measure" time="1.413"></testcase><testcase classname="test" name="test_is_dividing_working" time="1.977"></testcase><testcase classname="test" name="test_dumb_hssa" time="12.234"></testcase><testcase classname="test" name="test_limit_hssa" time="2.403"></testcase><testcase classname="test" name="test_hssa_visualization" time="75.516"><system-out><![CDATA[Showing image at iteration 0
+Showing image at iteration 1
+Showing image at iteration 2
+Showing image at iteration 3
+Showing image at iteration 4
+Showing image at iteration 5
+Showing image at iteration 6
+Showing image at iteration 7
+Showing image at iteration 8
+Showing image at iteration 9
+]]></system-out><system-err><![CDATA[/Users/xehivs/dev/hssa/hssa/HSSA.py:52: RuntimeWarning: invalid value encountered in double_scalars
+  intensity = (frame.intensity - minN) / (maxN - minN)
+]]></system-err></testcase></testsuite>

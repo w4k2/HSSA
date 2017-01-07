@@ -8,3 +8,4 @@ coverage
 ksskml
 codeclimate-test-reporter
 scipy
+matplotlib
