@@ -22,6 +22,8 @@ class HSFrame:
         self.label = -1
         # homogeneity measure
         self.homogeneity = 0
+        # intensity measure
+        self.intensity = 0
 
         # mean frame signature
         self.signature = []
@@ -78,20 +80,26 @@ class HSFrame:
 
         # Calculating index range
         stop = height * width
+        points = self.points
+        if self.points > stop:
+            points = stop
 
         # Getting signatures
-        signatures = []
-        for item in xrange(0, self.points):
-            index = random.randrange(stop)
-            x = int(index / width)
-            y = int(index % height)
-            signature = self.hs.signature(left + x, top + y)
-            signatures.append(signature)
-            # print '%03i - %05i - %02i:%02i' % (item, index, x, y)
+        signatures = [self.hs.signature(left, top)]
+        if stop:
+            for item in xrange(0, self.points):
+                index = random.randrange(stop)
+                x = int(index / width)
+                y = int(index % width)
+                signature = self.hs.signature(left + x, top + y)
+                signatures.append(signature)
+                # print '%03i - %05i - %02i:%02i' % (item, index, x, y)
         self.signature = np.mean(signatures, axis=0)
         # homogeneity as a mean standardDeviation
         self.homogeneity = \
             1 - (np.mean(np.std(signatures, axis=0)) / self.hs.max)
+
+        self.intensity = np.mean(self.signature)
 
     def __str__(self):
         return "F%i|L%i|S%i|L%i|H%.3f" % (

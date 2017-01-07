@@ -13,7 +13,7 @@ def endcolor():
 
 
 def loadImage():
-    with open('salinasA.json') as data_file:
+    with open('salinas.json') as data_file:
         dictionary = json.load(data_file)
 
     return HS(dictionary)
@@ -22,7 +22,8 @@ def loadImage():
 def test_loading():
     """Is image loading?"""
     hs = loadImage()
-    assert 'Salinas A image, 7 classes, 7138 samples of 204 bands' == str(hs)
+    assert 'Salinas image, 7 classes, 111104 samples of 204 bands' == str(hs)
+    # assert 'Salinas A image, 7 classes, 7138 samples of 204 bands' == str(hs)
 
 
 def test_signature():
@@ -38,13 +39,13 @@ def test_slice():
     slice = hs.slice(10)
     assert (hs.rows, hs.cols) == np.shape(slice)
 
-
+'''
 def test_signatures():
     """Are we able to summary classes?"""
     hs = loadImage()
     signatures = hs.signatures()
     assert (len(hs.classes), hs.bands) == np.shape(signatures)
-
+'''
 
 def test_hssa_init():
     """Can we create HSSA?"""
@@ -121,9 +122,8 @@ def test_limit_hssa():
 def test_hssa_visualization():
     """Can we visualize image?"""
     hs = loadImage()
-    threshold = .98
-    limit = 2
-    hssa = HSSA(hs, threshold, limit)
+    threshold = .995
+    hssa = HSSA(hs, threshold)
     while not hssa.isComplete:
         hssa.image()
         hssa.step()

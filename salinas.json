@@ -1,0 +1,14 @@
+{
+    "name": "Salinas",
+    "image": ["images/Salinas_corrected.mat", "salinas_corrected"],
+    "gt": ["images/Salinas_gt", "salinas_gt"],
+    "size": [512, 217, 204],
+    "classes": [
+      "background",
+      "Brocoli_green_weeds_1",
+      "Corn_senesced_green_weeds",
+      "Lettuce_romaine_4wk",
+      "Lettuce_romaine_5wk",
+      "Lettuce_romaine_6wk", "Lettuce_romaine_7wk"
+    ]
+}
