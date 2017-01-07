@@ -1,2 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?><testsuite name="nosetests" tests="11" errors="0" failures="0" skip="0"><testcase classname="test" name="test_loading" time="0.095"></testcase><testcase classname="test" name="test_signature" time="0.104"></testcase><testcase classname="test" name="test_slice" time="0.105"></testcase><testcase classname="test" name="test_signatures" time="0.705"></testcase><testcase classname="test" name="test_hssa_init" time="0.094"></testcase><testcase classname="test" name="test_hssa_frame_signature" time="0.123"><system-out><![CDATA[F0|L0|S-1|L-1|H0.959
-]]></system-out></testcase><testcase classname="test" name="test_hssa_homogeneity_measure" time="0.112"></testcase><testcase classname="test" name="test_is_dividing_working" time="0.503"></testcase><testcase classname="test" name="test_dumb_hssa" time="0.623"></testcase><testcase classname="test" name="test_limit_hssa" time="0.361"></testcase><testcase classname="test" name="test_hssa_visualization" time="0.581"></testcase></testsuite>
+<?xml version="1.0" encoding="UTF-8"?><testsuite name="nosetests" tests="11" errors="0" failures="0" skip="0"><testcase classname="test" name="test_loading" time="0.096"></testcase><testcase classname="test" name="test_signature" time="0.107"></testcase><testcase classname="test" name="test_slice" time="0.111"></testcase><testcase classname="test" name="test_signatures" time="0.760"></testcase><testcase classname="test" name="test_hssa_init" time="0.092"></testcase><testcase classname="test" name="test_hssa_frame_signature" time="0.092"><system-out><![CDATA[F0|L0|S-1|L-1|H0.959
+]]></system-out></testcase><testcase classname="test" name="test_hssa_homogeneity_measure" time="0.104"></testcase><testcase classname="test" name="test_is_dividing_working" time="0.475"></testcase><testcase classname="test" name="test_dumb_hssa" time="0.616"></testcase><testcase classname="test" name="test_limit_hssa" time="0.369"></testcase><testcase classname="test" name="test_hssa_visualization" time="3.464"><system-out><![CDATA[Showing image at iteration 0
+Showing image at iteration 1
+Showing image at iteration 2
+Showing image at iteration 3
+Showing image at iteration 4
+Showing image at iteration 5
+Showing image at iteration 6
+Showing image at iteration 7
+]]></system-out></testcase></testsuite>

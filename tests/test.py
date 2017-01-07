@@ -125,4 +125,6 @@ def test_hssa_visualization():
     limit = 2
     hssa = HSSA(hs, threshold, limit)
     while not hssa.isComplete:
+        hssa.image()
         hssa.step()
+    hssa.image()

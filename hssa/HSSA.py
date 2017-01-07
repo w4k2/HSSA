@@ -28,7 +28,11 @@ class HSSA:
 
     def image(self):
         print 'Showing image at iteration %i' % (self.iteration)
-        pass
+        img = [[[0, 1, 0]]]
+        imgplot = plt.imshow(img)
+        plt.savefig('hssa_i%i_t%.0f.png' % (
+            self.iteration,
+            1000 * self.threshold))
 
     def process(self):
         while not self.isComplete:
