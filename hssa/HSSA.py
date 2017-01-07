@@ -29,7 +29,11 @@ class HSSA:
         # Set up representation
         self.clean()
 
-    def image(self):
+    def image(self, title = False):
+        if not title:
+            title = 'hssa_i%i_t%.0f.png' % (
+                self.iteration,
+                1000 * self.threshold)
         base = pow(2, self.iteration)
         img = np.ones((base, base, 3))
         minN = 9999
@@ -48,7 +52,9 @@ class HSSA:
             intensity = .25 + intensity / 2
             hue = 0
             if frame.isHomo:
-                hue = frame.segment / float(self.segments)
+                hue = frame.segment / float(2 * len(self.hs.classes))
+                if self.segments > 2 * len(self.hs.classes):
+                    hue = frame.segment / float(self.segments)
             x = frame.location % amount
             y = frame.location / amount
             for i in xrange(length):
@@ -61,9 +67,7 @@ class HSSA:
                             colors.hsv_to_rgb([0, 0, intensity])
 
         imgplot = plt.imshow(img, interpolation="nearest")
-        plt.savefig('hssa_i%i_t%.0f.png' % (
-            self.iteration,
-            1000 * self.threshold))
+        plt.savefig(title)
 
     def process(self):
         while not self.isComplete:
@@ -92,16 +96,23 @@ class HSSA:
                 if frame.segment == -1:
                     frame.segment = self.segments
                     self.segments += 1
-        # print '# SHOWING SEGMENTS'
-        # for frame in self.homogenous:
-        #     print frame
+
+    def post(self):
+        pass
+        '''
+        for segment in xrange(self.segments):
+            print segment
+            for frame in self.homogenous:
+                if frame.segment == segment:
+                    print frame.label
+        '''
 
     def step(self):
         self.iteration += 1
         self.split()
         self.merge()
         for frame in self.homogenous:
-            frame.isHomo = True
+            frame.setHomo()
         self.isComplete = len(self.heterogenous) == 0
 
         # Breaking hetero

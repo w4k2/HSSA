@@ -32,6 +32,9 @@ class HS:
     def signature(self, row, col):
         return np.copy(self.image[row, col])
 
+    def label(self, row, col):
+        return int(np.copy(self.gt[row, col]))
+
     def slice(self, band):
         return np.copy(self.image[:, :, band])
 

@@ -32,6 +32,9 @@ class HSFrame:
         self.window = self.window()
         self.calculate()
 
+    def setHomo(self):
+        self.isHomo = True
+
     def divide(self):
         # Bases
         base = pow(2, self.fold)
@@ -86,15 +89,19 @@ class HSFrame:
 
         # Getting signatures
         signatures = [self.hs.signature(left, top)]
+        labels = [self.hs.label(left, top)]
         if stop:
-            for item in xrange(0, self.points):
+            for item in xrange(0, points):
                 index = random.randrange(stop)
                 x = int(index / width)
                 y = int(index % width)
                 signature = self.hs.signature(left + x, top + y)
                 signatures.append(signature)
+                labels.append(self.hs.label(left + x, top + y))
                 # print '%03i - %05i - %02i:%02i' % (item, index, x, y)
         self.signature = np.mean(signatures, axis=0)
+
+        self.label = max(set(labels), key=labels.count)
         # homogeneity as a mean standardDeviation
         self.homogeneity = \
             1 - (np.mean(np.std(signatures, axis=0)) / self.hs.max)
