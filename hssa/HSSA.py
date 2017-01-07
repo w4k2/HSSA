@@ -1,4 +1,6 @@
 import scipy.io
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
 import numpy as np
 
 from HS import *
@@ -23,6 +25,10 @@ class HSSA:
         self.homogenous = []
         # Set up representation
         self.clean()
+
+    def image(self):
+        print 'Showing image at iteration %i' % (self.iteration)
+        pass
 
     def process(self):
         while not self.isComplete:
