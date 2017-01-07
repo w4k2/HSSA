@@ -27,23 +27,15 @@ class HSSA:
         self.clean()
 
     def image(self):
-        print 'Showing image at iteration %i' % self.iteration
-        # img = np.ones((self.hs.cols + 1, self.hs.rows + 1, 3))
         base = 512
         img = np.ones((base, base, 3))
         minN = 9999
         maxN = 0
-        for frame in self.heterogenous:
+        for frame in self.heterogenous + self.homogenous:
             if frame.intensity < minN:
                 minN = frame.intensity
             if frame.intensity > maxN:
                 maxN = frame.intensity
-        for frame in self.homogenous:
-            if frame.intensity < minN:
-                minN = frame.intensity
-            if frame.intensity > maxN:
-                maxN = frame.intensity
-        # print '%f - %f' % (minN, maxN)
 
         # Hetero
         for frame in self.heterogenous:
