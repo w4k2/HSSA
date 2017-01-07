@@ -185,3 +185,4 @@ to label each segment only once*. The label assigned to a particular
 segment is then propagated to all samples which belong to it.
 
 - [http://www.ehu.eus/ccwintco/index.php?title=Hyperspectral_Remote_Sensing_Scenes](http://www.ehu.eus/ccwintco/index.php?title=Hyperspectral_Remote_Sensing_Scenes)
+- [http://matplotlib.org/users/image_tutorial.html](http://matplotlib.org/users/image_tutorial.html)
