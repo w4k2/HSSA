@@ -22,9 +22,9 @@ class HSFrame:
         self.label = -1
         # homogeneity measure
         self.homogeneity = 0
+        self.isHomo = False
         # intensity measure
         self.intensity = 0
-
         # mean frame signature
         self.signature = []
 

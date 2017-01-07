@@ -38,27 +38,22 @@ class HSSA:
                 maxN = frame.intensity
 
         # Hetero
-        for frame in self.heterogenous:
-            amount = pow(2,frame.fold)
+        for frame in self.heterogenous + self.homogenous:
+            amount = pow(2, frame.fold)
             length = base / amount
             intensity = (frame.intensity - minN) / (maxN - minN)
+            intensity = .25 + intensity / 2
             x = frame.location % amount
             y = frame.location / amount
             for i in xrange(length):
                 for j in xrange(length):
-                    img[length * x + i, length * y + j] = [
-                        intensity, 0, 0]
-        # Homo
-        for frame in self.homogenous:
-            amount = pow(2,frame.fold)
-            length = base / amount
-            intensity = (frame.intensity - minN) / (maxN - minN)
-            x = frame.location % amount
-            y = frame.location / amount
-            for i in xrange(length):
-                for j in xrange(length):
-                    img[length * x + i, length * y + j] = [
-                        0, intensity, 0]
+                    if frame.isHomo:
+                        img[length * x + i, length * y + j] = [
+                            intensity, 0, 0]
+                    else:
+                        img[length * x + i, length * y + j] = [
+                            intensity, intensity, intensity]
+
         imgplot = plt.imshow(img, interpolation="nearest")
         plt.savefig('hssa_i%i_t%.0f.png' % (
             self.iteration,
@@ -80,6 +75,8 @@ class HSSA:
     def step(self):
         self.iteration += 1
         self.split()
+        for frame in self.homogenous:
+            frame.isHomo = True
         self.isComplete = len(self.heterogenous) == 0
 
         # Breaking hetero
