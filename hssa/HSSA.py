@@ -27,7 +27,7 @@ class HSSA:
         self.clean()
 
     def image(self):
-        print 'Showing image at iteration %i' % (self.iteration)
+        print 'Showing image at iteration %i' % self.iteration
         # img = np.ones((self.hs.cols + 1, self.hs.rows + 1, 3))
         base = 512
         img = np.ones((base, base, 3))

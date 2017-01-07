@@ -13,6 +13,7 @@ engines:
       enabled: true
       exclude_fingerprints:
       - 6712dc780f17ef0aef1d502570c70e9a
+      - 47780d290927676fd7d239782fe329ed
 ratings:
   paths:
   - "**.py"
