@@ -117,14 +117,3 @@ def test_limit_hssa():
     hssa.process()
 
     assert len(hssa.homogenous) > 0 and len(hssa.heterogenous) > 0
-
-
-def test_hssa_visualization():
-    """Can we visualize image?"""
-    hs = loadImage()
-    threshold = .995
-    hssa = HSSA(hs, threshold)
-    while not hssa.isComplete:
-        hssa.image()
-        hssa.step()
-    hssa.image()
