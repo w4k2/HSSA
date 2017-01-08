@@ -1,5 +1,6 @@
 from hssa import *
 
+import csv
 import numpy as np
 import json
 
@@ -126,6 +127,14 @@ def test_hssa_final():
     limit = 6
     hssa = HSSA(hs, threshold, limit)
     hssa.process()
-    hssa.image('hssa_pre.png')
+    # hssa.image('hssa_pre.png')
+    # hssa.image('hssa_pre_l.png', True)
     hssa.post()
-    hssa.image('hssa_post.png')
+    # hssa.image('hssa_post.png')
+    # hssa.image('hssa_post_l.png', True)
+    representation = hssa.representation()
+    print len(representation)
+    myfile = open('result.csv', 'wb')
+    wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
+    for row in representation:
+        wr.writerow(row)

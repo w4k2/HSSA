@@ -74,6 +74,21 @@ class HSFrame:
 
         return {'top': top, 'left': left, 'width': width, 'height': height}
 
+    def signatures(self, amount):
+        width = self.window['width']
+        height = self.window['height']
+        top = self.window['top']
+        left = self.window['left']
+        stop = height * width
+        signatures = [self.hs.signature(left, top)]
+        for item in xrange(0, amount - 1):
+            index = random.randrange(stop)
+            x = int(index / width)
+            y = int(index % width)
+            signature = self.hs.signature(left + x, top + y)
+            signatures.append(signature)
+        return signatures
+
     def calculate(self):
         # Getting window parameters
         width = self.window['width']

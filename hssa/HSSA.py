@@ -29,7 +29,7 @@ class HSSA:
         # Set up representation
         self.clean()
 
-    def image(self, title = False):
+    def image(self, title = False, labels = False):
         if not title:
             title = 'hssa_i%i_t%.0f.png' % (
                 self.iteration,
@@ -52,9 +52,14 @@ class HSSA:
             intensity = .25 + intensity / 2
             hue = 0
             if frame.isHomo:
-                hue = frame.segment / float(2 * len(self.hs.classes))
-                if self.segments > 2 * len(self.hs.classes):
-                    hue = frame.segment / float(self.segments)
+                if labels:
+                    hue = frame.label / float(2 * len(self.hs.classes))
+                    if self.segments > 2 * len(self.hs.classes):
+                        hue = frame.label / float(self.segments)
+                else:
+                    hue = frame.segment / float(2 * len(self.hs.classes))
+                    if self.segments > 2 * len(self.hs.classes):
+                        hue = frame.segment / float(self.segments)
             x = frame.location % amount
             y = frame.location / amount
             for i in xrange(length):
@@ -98,14 +103,30 @@ class HSSA:
                     self.segments += 1
 
     def post(self):
-        pass
-        '''
         for segment in xrange(self.segments):
-            print segment
+            labels = []
             for frame in self.homogenous:
                 if frame.segment == segment:
-                    print frame.label
-        '''
+                    # print "%s - %i" % (frame, frame.label)
+                    labels.append(frame.label)
+            label = max(set(labels), key=labels.count)
+            for frame in self.homogenous:
+                if frame.segment == segment:
+                    frame.label = label
+
+    def representation(self):
+        result = []
+        for frame in self.homogenous:
+            # print frame
+            multiplier = self.iteration - frame.fold - 1
+            units = pow(2, multiplier * 2)
+            # print 'multiplier %i' % multiplier
+            # print '%i units' % units
+            for signature in frame.signatures(units):
+                line = [frame.label]
+                line.extend(signature)
+                result.append(line)
+        return result
 
     def step(self):
         self.iteration += 1
