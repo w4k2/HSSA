@@ -1,4 +1,5 @@
 import scipy.io
+from ksskml import Sample
 import numpy as np
 
 
@@ -29,15 +30,19 @@ class HS:
             self.rows * self.cols,
             self.bands)
 
-    def signature(self, row, col):
-        return np.copy(self.image[row, col])
+    def sample(self, location):
+        return Sample(self.signature(location), self.label(location))
 
-    def label(self, row, col):
-        return int(np.copy(self.gt[row, col]))
+    def signature(self, location):
+        return np.copy(self.image[location])
+
+    def label(self, location):
+        return int(np.copy(self.gt[location]))
 
     def slice(self, band):
         return np.copy(self.image[:, :, band])
 
+'''
     def signatures(self):
         labels = np.max(self.gt) + 1
         signatures = []
@@ -52,3 +57,4 @@ class HS:
                 signatures.append(signature)
 
         return signatures
+'''

@@ -113,6 +113,11 @@ class HSSA:
             for frame in self.homogenous:
                 if frame.segment == segment:
                     frame.label = label
+        # Removing the background
+        self.heterogenous = []
+        self.homogenous = \
+            [x for x in self.homogenous if x.label != 0]
+
 
     def representation(self):
         result = []

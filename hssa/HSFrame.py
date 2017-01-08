@@ -1,6 +1,7 @@
 import scipy.io
 import numpy as np
 import random
+import ksskml
 
 SEED = 123
 random.seed(SEED)
@@ -8,25 +9,16 @@ random.seed(SEED)
 
 class HSFrame:
     def __init__(self, hs, points=250, fold=0, location=0):
-        # Get amount of points to create mean signature
-        self.points = points
-        # Assign image
-        self.hs = hs
-        # iteration, when segment was created
-        self.fold = fold
-        # iteration based frame location
-        self.location = location
-        # segment identifier, resulting from the merging procedure
-        self.segment = -1
-        # class label given by the expert for region
-        self.label = -1
-        # homogeneity measure
-        self.homogeneity = 0
+        self.points = points # amount of points to create mean signature
+        self.hs = hs and     # image
+        self.fold = fold            # iteration, when frame was created
+        self.location = location # iteration based frame location
+        self.segment = -1 # segment identifier
+        self.label = -1 # class label given by the expert for region
+        self.homogeneity = 0 # homogeneity measure
         self.isHomo = False
-        # intensity measure
-        self.intensity = 0
-        # mean frame signature
-        self.signature = []
+        self.intensity = 0 # intensity measure
+        self.signature = [] # mean frame signature
 
         # Fill
         self.window = self.window()
@@ -80,13 +72,14 @@ class HSFrame:
         top = self.window['top']
         left = self.window['left']
         stop = height * width
-        signatures = [self.hs.signature(left, top)]
+        signatures = [self.hs.signature((left, top))]
         for item in xrange(0, amount - 1):
             index = random.randrange(stop)
             x = int(index / width)
             y = int(index % width)
-            signature = self.hs.signature(left + x, top + y)
-            signatures.append(signature)
+            sample = self.hs.sample((left + x, top + y))
+            signature = self.hs.signature((left + x, top + y))
+            signatures.append(sample.features)
         return signatures
 
     def calculate(self):
@@ -103,16 +96,16 @@ class HSFrame:
             points = stop
 
         # Getting signatures
-        signatures = [self.hs.signature(left, top)]
-        labels = [self.hs.label(left, top)]
+        signatures = [self.hs.signature((left, top))]
+        labels = [self.hs.label((left, top))]
         if stop:
             for item in xrange(0, points):
                 index = random.randrange(stop)
                 x = int(index / width)
                 y = int(index % width)
-                signature = self.hs.signature(left + x, top + y)
+                signature = self.hs.signature((left + x, top + y))
                 signatures.append(signature)
-                labels.append(self.hs.label(left + x, top + y))
+                labels.append(self.hs.label((left + x, top + y)))
                 # print '%03i - %05i - %02i:%02i' % (item, index, x, y)
         self.signature = np.mean(signatures, axis=0)
 

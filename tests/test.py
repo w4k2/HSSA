@@ -30,7 +30,8 @@ def test_loading():
 def test_signature():
     """Do we receive signatures?"""
     hs = loadImage()
-    signature = hs.signature(10, 10)
+    location = (10, 10)
+    signature = hs.signature(location)
     assert len(signature) == hs.bands
 
 
