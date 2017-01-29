@@ -4,6 +4,7 @@ import csv
 import numpy as np
 import json
 
+imagesDirectory = 'data/hsimages/'
 
 def blue():
     return "\033[92m"
@@ -14,7 +15,7 @@ def endcolor():
 
 
 def loadImage():
-    with open('salinasA.json') as data_file:
+    with open('%s%s' % (imagesDirectory, 'salinasA.json')) as data_file:
         dictionary = json.load(data_file)
 
     return HS(dictionary)

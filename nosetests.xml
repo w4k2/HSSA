@@ -1,11 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><testsuite name="nosetests" tests="1" errors="1" failures="0" skip="0"><testcase classname="test" name="test_loading" time="0.000"><error type="exceptions.IOError" message="[Errno 2] No such file or directory: 'salinasA.json'"><![CDATA[Traceback (most recent call last):
-  File "/Users/xehivs/anaconda2/lib/python2.7/unittest/case.py", line 329, in run
-    testMethod()
-  File "/Users/xehivs/anaconda2/lib/python2.7/site-packages/nose/case.py", line 197, in runTest
-    self.test(*self.arg)
-  File "/Users/xehivs/dev/hssa/tests/test.py", line 25, in test_loading
-    hs = loadImage()
-  File "/Users/xehivs/dev/hssa/tests/test.py", line 17, in loadImage
-    with open('salinasA.json') as data_file:
-IOError: [Errno 2] No such file or directory: 'salinasA.json'
-]]></error></testcase></testsuite>
+<?xml version="1.0" encoding="UTF-8"?><testsuite name="nosetests" tests="11" errors="0" failures="0" skip="0"><testcase classname="test" name="test_loading" time="0.088"></testcase><testcase classname="test" name="test_signature" time="0.084"></testcase><testcase classname="test" name="test_slice" time="0.087"></testcase><testcase classname="test" name="test_hssa_init" time="0.091"></testcase><testcase classname="test" name="test_hssa_frame_signature" time="0.102"><system-out><![CDATA[F0|L0|S-1|L12|H0.962
+]]></system-out></testcase><testcase classname="test" name="test_hssa_homogeneity_measure" time="0.094"></testcase><testcase classname="test" name="test_is_dividing_working" time="0.393"></testcase><testcase classname="test" name="test_dumb_hssa" time="0.413"></testcase><testcase classname="test" name="test_limit_hssa" time="0.292"></testcase><testcase classname="test" name="test_hssa_final" time="3.094"><system-out><![CDATA[960
+]]></system-out></testcase><testcase classname="test" name="test_hssa_cv" time="3.329"><system-out><![CDATA[952
+]]></system-out></testcase></testsuite>
