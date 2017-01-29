@@ -1,8 +1,11 @@
+# -*- coding: utf-8 -*-
 import scipy.io
-import weles
 import numpy as np
+import weles
 
-
+"""
+A class to store and to use hypersectral image.
+"""
 class HS:
     def __init__(self, dictionary):
         # Loading image and ground truth
@@ -20,9 +23,6 @@ class HS:
         self.bands = shape[2]
         self.name = dictionary['name']
         self.classes = dictionary['classes']
-
-    def setCV(cv):
-        self.cv = cv
 
     def loadMatFromTuple(self, entry):
         return scipy.io.loadmat(entry[0])[entry[1]]

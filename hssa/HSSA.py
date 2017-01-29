@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-import scipy.io
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import matplotlib.colors as colors
 import numpy as np
+import weles
 
 from HS import *
 from HSFrame import *
@@ -49,8 +49,8 @@ class HSSA:
     """
     def step(self):
         self.iteration += 1
-        self.split()
-        self.merge()
+        self.separate()
+        # self.merge()
         for frame in self.homogenous:
             frame.setHomo()
         self.isComplete = len(self.heterogenous) == 0
@@ -69,6 +69,7 @@ class HSSA:
             if self.iteration == self.limit:
                 break
             self.step()
+        self.merge()
 
     """
     ## Merging process
@@ -163,10 +164,10 @@ class HSSA:
         plt.savefig(title)
 
     """
-    ### Split frames
+    ### Separate frames
     """
-    def split(self):
-        # Splitting
+    def separate(self):
+        # separating
         self.homogenous.extend(
             [x for x in self.heterogenous if x.homogeneity > self.threshold])
         self.heterogenous = \
