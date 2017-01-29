@@ -1,7 +1,7 @@
 import scipy.io
 import numpy as np
 import random
-import ksskml
+import weles
 
 SEED = 123
 random.seed(SEED)
