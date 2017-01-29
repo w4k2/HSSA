@@ -1,3 +1,1 @@
-# HSSA docs
-
-- [HS](hs)
+../README.md
