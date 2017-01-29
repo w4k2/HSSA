@@ -16,6 +16,7 @@ test: getData
 
 docs:
 	cp README.md docs/index.md
+	cp -r figures docs/
 	pycco hssa/*.py
 
 .PHONY: publish test docs
