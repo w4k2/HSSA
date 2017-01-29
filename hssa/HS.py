@@ -1,5 +1,5 @@
 import scipy.io
-from ksskml import Sample
+import weles
 import numpy as np
 
 
@@ -29,7 +29,7 @@ class HS:
 
     def sample(self, location, learning = True):
         cvLocation = location
-        return Sample(self.signature(cvLocation), self.label(cvLocation))
+        return weles.Sample(self.signature(cvLocation), self.label(cvLocation))
 
     def signature(self, location):
         return np.copy(self.image[location])
