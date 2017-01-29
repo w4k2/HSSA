@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import scipy.io
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
@@ -8,48 +9,44 @@ from HS import *
 from HSFrame import *
 
 """
-"**Pycco**" is a Python port of [Docco](http://jashkenas.github.com/docco/):
-the original quick-and-dirty, hundred-line-long, literate-programming-style
-documentation generator. It produces HTML that displays your comments
-alongside your code. Comments are passed through
-[Markdown](http://daringfireball.net/projects/markdown/syntax) and
-[SmartyPants](http://daringfireball.net/projects/smartypants), while code is
-passed through [Pygments](http://pygments.org/) for syntax highlighting.
-This page is the result of running Pycco against its own source file.
-If you install Pycco, you can run it from the command-line:
-    pycco src/*.py
-This will generate linked HTML documentation for the named source files,
-saving it into a `docs` folder by default.
-The [source for Pycco](https://github.com/pycco-docs/pycco) is available on GitHub,
-and released under the MIT license.
-To install Pycco, simply
-    pip install pycco
-Or, to install the latest source
-    git clone git://github.com/pycco-docs/pycco.git
-    cd pycco
-    python setup.py install
+**HSSA** is a two-staged segmentation tool for hs images. It is based on consecutive division of image to decompose it into a set of homogenous segments. Later, according to labels assigned by an expert, the representation is prepared as an input for classification methods.
 """
 
 class HSSA:
+    ### Initialization
     def __init__(self, hs, threshold, limit=99, cv=-1):
-        # Assign image
+        """
+        Assign:
+
+        - `hs` — hyperspectral image,
+        - `threshold` — homogeneity threshold,
+        - `limit` — iteration limiter,
+        """
         self.hs = hs
-        # Set homogeneity threshold
         self.threshold = threshold
-        # Set iteration limiter
         self.limit = limit
-        # Iteration number
+
+        """
+        And initialize:
+
+        - `iteration` — number of current iteration,
+        - `isComplete` — completion flag,
+        - `segments` - segments counter
+        """
         self.iteration = 0
-        # Is done?
         self.isComplete = False
-        # segments count
         self.segments = 0
 
-        # Initialize set of frames
+        # Initialize sets of frames and set up representation.
         self.heterogenous = []
         self.homogenous = []
-        # Set up representation
         self.clean()
+
+    def clean(self):
+        self.iteration = 0
+        self.heterogenous = [HSFrame(self.hs)]
+        self.homogenous = []
+        self.isComplete = False
 
     def image(self, title = False, labels = False):
         if not title:
@@ -167,9 +164,3 @@ class HSSA:
         for frame in self.heterogenous:
             newHeterogenous.extend(frame.divide())
         self.heterogenous = newHeterogenous
-
-    def clean(self):
-        self.iteration = 0
-        self.heterogenous = [HSFrame(self.hs)]
-        self.homogenous = []
-        self.isComplete = False
