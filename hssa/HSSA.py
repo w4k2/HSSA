@@ -7,6 +7,28 @@ import numpy as np
 from HS import *
 from HSFrame import *
 
+"""
+"**Pycco**" is a Python port of [Docco](http://jashkenas.github.com/docco/):
+the original quick-and-dirty, hundred-line-long, literate-programming-style
+documentation generator. It produces HTML that displays your comments
+alongside your code. Comments are passed through
+[Markdown](http://daringfireball.net/projects/markdown/syntax) and
+[SmartyPants](http://daringfireball.net/projects/smartypants), while code is
+passed through [Pygments](http://pygments.org/) for syntax highlighting.
+This page is the result of running Pycco against its own source file.
+If you install Pycco, you can run it from the command-line:
+    pycco src/*.py
+This will generate linked HTML documentation for the named source files,
+saving it into a `docs` folder by default.
+The [source for Pycco](https://github.com/pycco-docs/pycco) is available on GitHub,
+and released under the MIT license.
+To install Pycco, simply
+    pip install pycco
+Or, to install the latest source
+    git clone git://github.com/pycco-docs/pycco.git
+    cd pycco
+    python setup.py install
+"""
 
 class HSSA:
     def __init__(self, hs, threshold, limit=99, cv=-1):
@@ -117,7 +139,6 @@ class HSSA:
         self.heterogenous = []
         self.homogenous = \
             [x for x in self.homogenous if x.label != 0]
-
 
     def representation(self):
         result = []
