@@ -54,11 +54,19 @@ class HS:
         return np.copy(self.image[:, :, band])
 
     ## Helper functions
+
     """
     ## Loading from .mat file
     """
     def loadMatFromTuple(self, entry):
         return scipy.io.loadmat(entry[0])[entry[1]]
+
+    """
+    ## Exporting Weles dataset
+    """
+    def dataset(self):
+        return None
+
 
     """
     ## Be verbose, man

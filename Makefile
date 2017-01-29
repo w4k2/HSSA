@@ -1,5 +1,5 @@
 init:
-	pip install -r requirements.txt
+	pip install -U -I -r requirements.txt
 
 install:
 	python setup.py install

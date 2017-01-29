@@ -16,3 +16,8 @@ with open('%s%s' % (imagesDirectory, 'salinasA.json')) as data_file:
     dictionary = json.load(data_file)
 img = hssa.HS(dictionary)
 print img
+
+# Weles export
+print "- export as Weles dataset"
+dataset = img.dataset()
+print dataset
