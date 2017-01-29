@@ -9,3 +9,4 @@ weles
 codeclimate-test-reporter
 scipy
 matplotlib
+sklearn
