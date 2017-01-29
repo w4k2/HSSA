@@ -16,7 +16,7 @@ class HSSA:
     """
     ## Initialization
     """
-    def __init__(self, hs, threshold, limit=99, cv=-1):
+    def __init__(self, hs, threshold, limit=99):
         """
         Assign:
 
