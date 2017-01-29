@@ -15,6 +15,7 @@ test: getData
 	nosetests --verbosity=2 --with-coverage -x --with-xunit -cover-erase --cover-package=hssa --nocapture
 
 docs:
+	cp README.md docs/index.md
 	pycco hssa/*.py
 
 .PHONY: publish test docs
