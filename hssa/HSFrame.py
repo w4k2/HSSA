@@ -23,7 +23,6 @@ class Window:
         self.width = int(width)
         self.height = int(height)
 
-
 class HSFrame:
     def __init__(self, hs, points=250, fold=0, location=0):
         self.points = points  # amount of points to create mean signature

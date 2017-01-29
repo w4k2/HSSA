@@ -46,20 +46,3 @@ class HS:
             len(self.classes),
             self.rows * self.cols,
             self.bands)
-
-'''
-    def signatures(self):
-        labels = np.max(self.gt) + 1
-        signatures = []
-        for label in xrange(0, labels):
-            stack = []
-            for x, row in enumerate(self.gt):
-                for y, value in enumerate(row):
-                    if value == label:
-                        stack.append(self.signature(x, y))
-            if len(stack) != 0:
-                signature = np.mean(stack, 0)
-                signatures.append(signature)
-
-        return signatures
-'''
