@@ -1,11 +1,11 @@
 # Tests for HSSA.
-from hssa import *
-
+import hssa
 import csv
 import numpy as np
 import json
 
 imagesDirectory = 'data/hsimages/'
+
 
 def blue():
     return "\033[92m"
@@ -19,7 +19,7 @@ def loadImage():
     with open('%s%s' % (imagesDirectory, 'salinasA.json')) as data_file:
         dictionary = json.load(data_file)
 
-    return HS(dictionary)
+    return hssa.HS(dictionary)
 
 
 def test_loading():
@@ -43,20 +43,13 @@ def test_slice():
     slice = hs.slice(10)
     assert (hs.rows, hs.cols) == np.shape(slice)
 
-'''
-def test_signatures():
-    """Are we able to summary classes?"""
-    hs = loadImage()
-    signatures = hs.signatures()
-    assert (len(hs.classes), hs.bands) == np.shape(signatures)
-'''
 
 def test_hssa_init():
     """Can we create HSSA?"""
     hs = loadImage()
     threshold = .5
     limit = 3
-    hssa = HSSA(hs, threshold, limit)
+    hssa.HSSA(hs, threshold, limit)
 
 
 def test_hssa_frame_signature():
@@ -64,8 +57,8 @@ def test_hssa_frame_signature():
     hs = loadImage()
     threshold = .5
     limit = 3
-    hssa = HSSA(hs, threshold, limit)
-    frame = hssa.heterogenous[0]
+    sgm = hssa.HSSA(hs, threshold, limit)
+    frame = sgm.heterogenous[0]
     print frame
     assert len(frame.signature) == hs.bands
 
@@ -75,8 +68,8 @@ def test_hssa_homogeneity_measure():
     hs = loadImage()
     threshold = .5
     limit = 3
-    hssa = HSSA(hs, threshold, limit)
-    frame = hssa.heterogenous[0]
+    sgm = hssa.HSSA(hs, threshold, limit)
+    frame = sgm.heterogenous[0]
     assert frame.homogeneity > 0 and frame.homogeneity < 1
 
 
@@ -85,8 +78,8 @@ def test_is_dividing_working():
     hs = loadImage()
     threshold = .5
     limit = 3
-    hssa = HSSA(hs, threshold, limit)
-    frame = hssa.heterogenous[0]
+    sgm = hssa.HSSA(hs, threshold, limit)
+    frame = sgm.heterogenous[0]
 
     thirdStageLocations = []
     newFrames = frame.divide()
@@ -105,11 +98,11 @@ def test_dumb_hssa():
     hs = loadImage()
     threshold = .98
     limit = 2
-    hssa = HSSA(hs, threshold, limit)
-    while not hssa.isComplete:
-        hssa.step()
+    sgm = hssa.HSSA(hs, threshold, limit)
+    while not sgm.isComplete:
+        sgm.step()
 
-    assert len(hssa.homogenous) > 0 and len(hssa.heterogenous) == 0
+    assert len(sgm.homogenous) > 0 and len(sgm.heterogenous) == 0
 
 
 def test_limit_hssa():
@@ -117,10 +110,10 @@ def test_limit_hssa():
     hs = loadImage()
     threshold = .98
     limit = 4
-    hssa = HSSA(hs, threshold, limit)
-    hssa.process()
+    sgm = hssa.HSSA(hs, threshold, limit)
+    sgm.process()
 
-    assert len(hssa.homogenous) > 0 and len(hssa.heterogenous) > 0
+    assert len(sgm.homogenous) > 0 and len(sgm.heterogenous) > 0
 
 
 def test_hssa_final():
@@ -128,19 +121,16 @@ def test_hssa_final():
     hs = loadImage()
     threshold = .995
     limit = 6
-    hssa = HSSA(hs, threshold, limit)
-    hssa.process()
-    # hssa.image('hssa_pre.png')
-    # hssa.image('hssa_pre_l.png', True)
-    hssa.post()
-    # hssa.image('hssa_post.png')
-    # hssa.image('hssa_post_l.png', True)
-    representation = hssa.representation()
+    sgm = hssa.HSSA(hs, threshold, limit)
+    sgm.process()
+    sgm.post()
+    representation = sgm.representation()
     print len(representation)
     myfile = open('result.csv', 'wb')
     wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
     for row in representation:
         wr.writerow(row)
+
 
 def test_hssa_cv():
     """Cross validation dataset!"""
@@ -148,10 +138,10 @@ def test_hssa_cv():
     threshold = .995
     limit = 6
     cv = 0
-    hssa = HSSA(hs, threshold, limit, cv)
-    hssa.process()
-    hssa.post()
-    representation = hssa.representation()
+    sgm = hssa.HSSA(hs, threshold, limit, cv)
+    sgm.process()
+    sgm.post()
+    representation = sgm.representation()
     print len(representation)
     myfile = open('result.csv', 'wb')
     wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
