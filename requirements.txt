@@ -5,7 +5,7 @@ enum
 pycco
 numpy
 coverage
-ksskml
+weles
 codeclimate-test-reporter
 scipy
 matplotlib
