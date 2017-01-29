@@ -13,7 +13,9 @@ from HSFrame import *
 """
 
 class HSSA:
-    ### Initialization
+    """
+    ## Initialization
+    """
     def __init__(self, hs, threshold, limit=99, cv=-1):
         """
         Assign:
@@ -42,12 +44,79 @@ class HSSA:
         self.homogenous = []
         self.clean()
 
+    """
+    ## Single iteration
+    """
+    def step(self):
+        self.iteration += 1
+        self.split()
+        self.merge()
+        for frame in self.homogenous:
+            frame.setHomo()
+        self.isComplete = len(self.heterogenous) == 0
+
+        # Breaking hetero
+        newHeterogenous = []
+        for frame in self.heterogenous:
+            newHeterogenous.extend(frame.divide())
+        self.heterogenous = newHeterogenous
+
+    """
+    ## Whole loop
+    """
+    def process(self):
+        while not self.isComplete:
+            if self.iteration == self.limit:
+                break
+            self.step()
+
+    """
+    ## Merging process
+    """
+    def merge(self):
+        for i in xrange(len(self.homogenous)):
+            frame = self.homogenous[i]
+            if frame.segment == -1:
+                for j in xrange(i):
+                    cmpFrame = self.homogenous[j]
+                    similarity = \
+                        1 - (np.mean(np.std([frame.signature, cmpFrame.signature], axis=0)) / self.hs.max)
+                    if similarity > self.threshold:
+                        frame.segment = cmpFrame.segment
+                        break
+                if frame.segment == -1:
+                    frame.segment = self.segments
+                    self.segments += 1
+
+    """
+    ## Algorithm output
+    """
+    def representation(self):
+        result = []
+        for frame in self.homogenous:
+            # print frame
+            multiplier = self.iteration - frame.fold - 1
+            units = pow(2, multiplier * 2)
+            for signature in frame.signatures(units):
+                line = [frame.label]
+                line.extend(signature)
+                result.append(line)
+        return result
+
+    ## Helper functions
+
+    """
+    ### Preparing representation to work
+    """
     def clean(self):
         self.iteration = 0
         self.heterogenous = [HSFrame(self.hs)]
         self.homogenous = []
         self.isComplete = False
 
+    """
+    ### Generating png preview
+    """
     def image(self, title = False, labels = False):
         if not title:
             title = 'hssa_i%i_t%.0f.png' % (
@@ -93,12 +162,9 @@ class HSSA:
         imgplot = plt.imshow(img, interpolation="nearest")
         plt.savefig(title)
 
-    def process(self):
-        while not self.isComplete:
-            if self.iteration == self.limit:
-                break
-            self.step()
-
+    """
+    ### Split frames
+    """
     def split(self):
         # Splitting
         self.homogenous.extend(
@@ -106,27 +172,14 @@ class HSSA:
         self.heterogenous = \
             [x for x in self.heterogenous if x.homogeneity <= self.threshold]
 
-    def merge(self):
-        for i in xrange(len(self.homogenous)):
-            frame = self.homogenous[i]
-            if frame.segment == -1:
-                for j in xrange(i):
-                    cmpFrame = self.homogenous[j]
-                    similarity = \
-                        1 - (np.mean(np.std([frame.signature, cmpFrame.signature], axis=0)) / self.hs.max)
-                    if similarity > self.threshold:
-                        frame.segment = cmpFrame.segment
-                        break
-                if frame.segment == -1:
-                    frame.segment = self.segments
-                    self.segments += 1
-
+    """
+    ### Postprocessing
+    """
     def post(self):
         for segment in xrange(self.segments):
             labels = []
             for frame in self.homogenous:
                 if frame.segment == segment:
-                    # print "%s - %i" % (frame, frame.label)
                     labels.append(frame.label)
             label = max(set(labels), key=labels.count)
             for frame in self.homogenous:
@@ -136,31 +189,3 @@ class HSSA:
         self.heterogenous = []
         self.homogenous = \
             [x for x in self.homogenous if x.label != 0]
-
-    def representation(self):
-        result = []
-        for frame in self.homogenous:
-            # print frame
-            multiplier = self.iteration - frame.fold - 1
-            units = pow(2, multiplier * 2)
-            # print 'multiplier %i' % multiplier
-            # print '%i units' % units
-            for signature in frame.signatures(units):
-                line = [frame.label]
-                line.extend(signature)
-                result.append(line)
-        return result
-
-    def step(self):
-        self.iteration += 1
-        self.split()
-        self.merge()
-        for frame in self.homogenous:
-            frame.setHomo()
-        self.isComplete = len(self.heterogenous) == 0
-
-        # Breaking hetero
-        newHeterogenous = []
-        for frame in self.heterogenous:
-            newHeterogenous.extend(frame.divide())
-        self.heterogenous = newHeterogenous
