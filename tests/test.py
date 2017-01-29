@@ -1,5 +1,6 @@
 # Tests for HSSA.
 import hssa
+import weles
 import csv
 import numpy as np
 import json
@@ -130,3 +131,17 @@ def test_hssa_final():
     wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
     for row in representation:
         wr.writerow(row)
+
+def test_weles_pass():
+    """Passing image as dataset to Weles!"""
+    img = loadImage()
+    dataset = img.dataset()
+    configuration = {
+        'k': 20
+    }
+    clf = weles.sklKNN(dataset, configuration).quickLoop()
+    print clf
+    clf = weles.sklDTC(dataset, configuration).quickLoop()
+    print clf
+    clf = weles.sklMLP(dataset, configuration).quickLoop()
+    print clf

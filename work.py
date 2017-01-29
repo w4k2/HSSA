@@ -21,3 +21,5 @@ print img
 print "- export as Weles dataset"
 dataset = img.dataset()
 print dataset
+
+print dataset.samples[0].features[:4]

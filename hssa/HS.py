@@ -31,9 +31,10 @@ class HS:
     """
     ### Getting sample
     """
-    def sample(self, location, learning = True):
-        cvLocation = location
-        return weles.Sample(self.signature(cvLocation), self.label(cvLocation))
+    def sample(self, location):
+        return weles.Sample(
+            self.signature(location),
+            self.label(location))
 
     """
     ### Getting signature
@@ -65,7 +66,19 @@ class HS:
     ## Exporting Weles dataset
     """
     def dataset(self):
-        return None
+        dataset = weles.Dataset()
+        db_name = self.name
+        source_samples = []
+        classes = {}
+        for x in xrange(self.rows):
+            for y in xrange(self.cols):
+                sample = self.sample((x, y))
+                source_samples.append(sample)
+                if not sample.label in classes:
+                    classes.update({sample.label: len(classes)})
+                sample.label = classes[sample.label]
+        dataset.fill(db_name, source_samples, classes)
+        return dataset
 
 
     """
