@@ -139,3 +139,19 @@ def test_hssa_final():
     wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
     for row in representation:
         wr.writerow(row)
+
+def test_hssa_cv():
+    """Cross validation dataset!"""
+    hs = loadImage()
+    threshold = .995
+    limit = 6
+    cv = 0
+    hssa = HSSA(hs, threshold, limit, cv)
+    hssa.process()
+    hssa.post()
+    representation = hssa.representation()
+    print len(representation)
+    myfile = open('result.csv', 'wb')
+    wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
+    for row in representation:
+        wr.writerow(row)

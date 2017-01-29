@@ -6,22 +6,39 @@ import ksskml
 SEED = 123
 random.seed(SEED)
 
+class Window:
+    def __init__(self, frame):
+        # Getting base
+        base = pow(2, frame.fold)
+
+        # Calculating size
+        width = frame.hs.cols / base
+        height = frame.hs.rows / base
+
+        # Establishing position
+        x = int(frame.location / base)
+        y = int(frame.location % base)
+        self.top = width * x
+        self.left = height * y
+        self.width = int(width)
+        self.height = int(height)
+
 
 class HSFrame:
     def __init__(self, hs, points=250, fold=0, location=0):
-        self.points = points # amount of points to create mean signature
-        self.hs = hs and     # image
+        self.points = points  # amount of points to create mean signature
+        self.hs = hs  # image
         self.fold = fold            # iteration, when frame was created
-        self.location = location # iteration based frame location
-        self.segment = -1 # segment identifier
-        self.label = -1 # class label given by the expert for region
-        self.homogeneity = 0 # homogeneity measure
+        self.location = location  # iteration based frame location
+        self.segment = -1  # segment identifier
+        self.label = -1  # class label given by the expert for region
+        self.homogeneity = 0  # homogeneity measure
         self.isHomo = False
-        self.intensity = 0 # intensity measure
-        self.signature = [] # mean frame signature
+        self.intensity = 0  # intensity measure
+        self.signature = []  # mean frame signature
 
         # Fill
-        self.window = self.window()
+        self.window = Window(self)
         self.calculate()
 
     def setHomo(self):
@@ -50,27 +67,11 @@ class HSFrame:
             HSFrame(self.hs, self.points, self.fold + 1, x + newBase + 1))
         return frames
 
-    def window(self):
-        # Getting base
-        base = pow(2, self.fold)
-
-        # Calculating size
-        width = int(self.hs.cols / base)
-        height = int(self.hs.rows / base)
-
-        # Establishing position
-        x = int(self.location / base)
-        y = int(self.location % base)
-        top = width * x
-        left = height * y
-
-        return {'top': top, 'left': left, 'width': width, 'height': height}
-
     def signatures(self, amount):
-        width = self.window['width']
-        height = self.window['height']
-        top = self.window['top']
-        left = self.window['left']
+        width = self.window.width
+        height = self.window.height
+        top = self.window.top
+        left = self.window.left
         stop = height * width
         signatures = [self.hs.signature((left, top))]
         for item in xrange(0, amount - 1):
@@ -84,10 +85,10 @@ class HSFrame:
 
     def calculate(self):
         # Getting window parameters
-        width = self.window['width']
-        height = self.window['height']
-        top = self.window['top']
-        left = self.window['left']
+        width = self.window.width
+        height = self.window.height
+        top = self.window.top
+        left = self.window.left
 
         # Calculating index range
         stop = height * width

@@ -9,7 +9,7 @@ from HSFrame import *
 
 
 class HSSA:
-    def __init__(self, hs, threshold, limit=99):
+    def __init__(self, hs, threshold, limit=99, cv=-1):
         # Assign image
         self.hs = hs
         # Set homogeneity threshold

@@ -4,8 +4,8 @@ import json
 
 with open('salinas.json') as data_file:
     hs = HS(json.load(data_file))
-threshold = .995
-limit = 6
+threshold = 1
+limit = 7
 hssa = HSSA(hs, threshold, limit)
 hssa.process()
 hssa.image('hssa_0_background')

@@ -11,6 +11,7 @@ class HS:
 
         # Searching for maximum
         self.max = np.amax(self.image)
+        self.cv = -1
 
         # Getting in shape
         shape = np.shape(self.image)
@@ -20,18 +21,15 @@ class HS:
         self.name = dictionary['name']
         self.classes = dictionary['classes']
 
+    def setCV(cv):
+        self.cv = cv
+
     def loadMatFromTuple(self, entry):
         return scipy.io.loadmat(entry[0])[entry[1]]
 
-    def __str__(self):
-        return '%s image, %i classes, %i samples of %i bands' % (
-            self.name,
-            len(self.classes),
-            self.rows * self.cols,
-            self.bands)
-
-    def sample(self, location):
-        return Sample(self.signature(location), self.label(location))
+    def sample(self, location, learning = True):
+        cvLocation = location
+        return Sample(self.signature(cvLocation), self.label(cvLocation))
 
     def signature(self, location):
         return np.copy(self.image[location])
@@ -41,6 +39,13 @@ class HS:
 
     def slice(self, band):
         return np.copy(self.image[:, :, band])
+
+    def __str__(self):
+        return '%s image, %i classes, %i samples of %i bands' % (
+            self.name,
+            len(self.classes),
+            self.rows * self.cols,
+            self.bands)
 
 '''
     def signatures(self):
