@@ -2,6 +2,7 @@
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import matplotlib.colors as colors
+from operator import attrgetter
 import numpy as np
 import weles
 
@@ -131,28 +132,28 @@ class HSSA:
     ### Generating png preview
     """
     def png(self, title = False, labels = False):
+        # Join FLR-s
+        union = self.heterogenous + self.homogenous
+
         # Generate title if not provided.
         if not title:
             title = 'hssa_i%i_t%.0f.png' % (
                 self.iteration,
                 1000 * self.threshold)
-        # Establish base resolution on a iterated power of 2. 
+
+        # Establish base resolution on a iterated power of 2.
         base = pow(2, self.iteration)
         img = np.ones((base, base, 3))
-        minN = 9999
-        maxN = 0
-        for frame in self.heterogenous + self.homogenous:
-            if frame.intensity < minN:
-                minN = frame.intensity
-            if frame.intensity > maxN:
-                maxN = frame.intensity
+
+        # Scale intensivity according to values in FLR-s.
+        minN = min(union, key=attrgetter('intensity')).intensity
+        maxN = max(union, key=attrgetter('intensity')).intensity
 
         # Hetero
-        for frame in self.heterogenous + self.homogenous:
+        for frame in union:
             amount = pow(2, frame.fold)
             length = base / amount
             intensity = (frame.intensity - minN) / (maxN - minN)
-            intensity = .25 + intensity / 2
             hue = 0
             if frame.isHomo:
                 if labels:
