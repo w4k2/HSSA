@@ -25,6 +25,8 @@ class HS:
 
         # Searching for maximum value
         self.max = np.amax(self.image)
+        self.maxlabel = np.amax(self.gt)
+        print self.maxlabel
 
     ## Operators
 

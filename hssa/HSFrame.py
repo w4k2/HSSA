@@ -23,6 +23,12 @@ class Window:
         self.left = int(height * y)
         self.width = int(width)
         self.height = int(height)
+
+        if self.width == 0:
+            self.width = 1
+
+        if self.height == 0:
+            self.height = 1
         '''
         print '[C%i R%i L%i X%i Y%i] t:%i l:%i w:%i(%.2f) h:%i(%.2f)' %(
             frame.hs.cols, frame.hs.rows,
@@ -32,9 +38,13 @@ class Window:
             self.height, height
         )
         '''
+    def __str__(self):
+        return "T:%i L:%i W:%i H:%i" % (
+            self.top, self.left, self.width, self.height
+        )
 
 class HSFrame:
-    def __init__(self, hs, points=15, fold=0, location=0):
+    def __init__(self, hs, points=20, fold=0, location=0):
         self.points = points  # amount of points to create mean signature
         self.hs = hs  # image
         self.fold = fold            # iteration, when frame was created
@@ -103,21 +113,22 @@ class HSFrame:
         stop = height * width
         points = self.points
         if self.points > stop:
-            # print 'Not %i but %i' % (points, stop)
             points = stop
 
+
         # Getting signatures
-        signatures = [self.hs.signature((left, top))]
-        labels = [self.hs.label((left, top))]
-        if stop:
-            for item in xrange(0, points):
-                index = random.randrange(stop)
-                x = int(index / width)
-                y = int(index % width)
-                signature = self.hs.signature((left + x, top + y))
-                signatures.append(signature)
-                labels.append(self.hs.label((left + x, top + y)))
-                # print '%03i - %05i - %02i:%02i' % (item, index, x, y)
+        signatures = []#[self.hs.signature((left, top))]
+        labels = []#[self.hs.label((left, top))]
+        #print self.window
+        #print points
+        for item in xrange(0, points):
+            index = random.randrange(stop)
+            x = int(index / width)
+            y = int(index % width)
+            signature = self.hs.signature((left + x, top + y))
+            signatures.append(signature)
+            labels.append(self.hs.label((left + x, top + y)))
+
         self.signature = np.mean(signatures, axis=0)
 
         self.label = max(set(labels), key=labels.count)

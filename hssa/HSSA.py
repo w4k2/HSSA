@@ -18,7 +18,7 @@ class HSSA:
     """
     ## Initialization
     """
-    def __init__(self, hs, threshold, limit=99):
+    def __init__(self, hs, threshold, limit=99, points=20):
         """
         Assign:
 
@@ -29,6 +29,7 @@ class HSSA:
         self.hs = hs
         self.threshold = threshold
         self.limit = limit
+        self.points = points
 
         """
         And initialize:
@@ -40,6 +41,8 @@ class HSSA:
         self.iteration = 0
         self.isComplete = False
         self.segments = 0
+
+        self.maxlabel = 0
 
         # Initialize sets of frames and set up representation.
         self.heterogenous = []
@@ -115,12 +118,13 @@ class HSSA:
     ### Status string
     """
     def __str__(self):
-        return "%s %s, iteration %i, %i heterogenous, %i homogenous" % (
+        return "%s %s, iteration %i, %i heterogenous, %i homogenous, %i segments" % (
             "complete" if self.isComplete else "in progress",
             self.hs.name,
             self.iteration,
             len(self.heterogenous),
-            len(self.homogenous)
+            len(self.homogenous),
+            self.segments
         )
 
     """
@@ -128,7 +132,7 @@ class HSSA:
     """
     def clean(self):
         self.iteration = 0
-        self.heterogenous = [HSFrame(self.hs)]
+        self.heterogenous = [HSFrame(self.hs, self.points)]
         self.homogenous = []
         self.isComplete = False
 
@@ -161,9 +165,7 @@ class HSSA:
             hue = 0
             if frame.isHomo:
                 if labels:
-                    hue = frame.label / float(2 * len(self.hs.classes))
-                    if self.segments > 2 * len(self.hs.classes):
-                        hue = frame.label / float(self.segments)
+                    hue = frame.label / float(self.hs.maxlabel)
                 else:
                     hue = frame.segment / float(2 * len(self.hs.classes))
                     if self.segments > 2 * len(self.hs.classes):
@@ -210,6 +212,7 @@ class HSSA:
     ### Postprocessing
     """
     def post(self):
+        analysis = []
         # Analyzing segment by segment
         for segment in xrange(self.segments):
             labels = []
@@ -230,7 +233,10 @@ class HSSA:
                     votes[label[0]] += value
 
             label = max(votes.iteritems(), key=operator.itemgetter(1))[0]
-
+            if label > self.maxlabel:
+                self.maxlabel = label
+            if not label in analysis:
+                analysis.append(label)
 
             print "Segment %i of size %i labeled as %i" % (
                 segment, sizeOfSegment, label)
@@ -243,3 +249,6 @@ class HSSA:
         self.heterogenous = []
         self.homogenous = \
             [x for x in self.homogenous if x.label != 0]
+
+        # print analysis
+        print "%i classes detected" % len(analysis)
