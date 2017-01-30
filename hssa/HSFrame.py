@@ -34,7 +34,7 @@ class Window:
         '''
 
 class HSFrame:
-    def __init__(self, hs, points=50, fold=0, location=0):
+    def __init__(self, hs, points=15, fold=0, location=0):
         self.points = points  # amount of points to create mean signature
         self.hs = hs  # image
         self.fold = fold            # iteration, when frame was created
@@ -103,6 +103,7 @@ class HSFrame:
         stop = height * width
         points = self.points
         if self.points > stop:
+            # print 'Not %i but %i' % (points, stop)
             points = stop
 
         # Getting signatures

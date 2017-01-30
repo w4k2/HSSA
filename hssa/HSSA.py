@@ -5,6 +5,7 @@ import matplotlib.colors as colors
 from operator import attrgetter
 import numpy as np
 import weles
+import operator
 
 from HS import *
 from HSFrame import *
@@ -175,7 +176,6 @@ class HSSA:
                         if labels:
                             img[length * x + i, length * y + j] = \
                                 colors.hsv_to_rgb([hue, .75, .75])
-
                         else:
                             img[length * x + i, length * y + j] = \
                                 colors.hsv_to_rgb([hue, 1, .5 + intensity / 2])
@@ -186,12 +186,13 @@ class HSSA:
         # Plot
         plt.imshow(img, interpolation="nearest")
         plt.axis('off')
-        plt.title('%s image, iteration %i, %i segments\n%i homo / %i hetero' % (
+        plt.title('%s image, iteration %i, t = %.3f\n%i homo / %i hetero / %i segments' % (
             self.hs.name,
             self.iteration,
-            self.segments,
+            self.threshold,
             len(self.homogenous),
-            len(self.heterogenous)
+            len(self.heterogenous),
+            self.segments
         ))
         plt.savefig(title)
 
@@ -209,15 +210,35 @@ class HSSA:
     ### Postprocessing
     """
     def post(self):
+        # Analyzing segment by segment
         for segment in xrange(self.segments):
             labels = []
             for frame in self.homogenous:
                 if frame.segment == segment:
-                    labels.append(frame.label)
-            label = max(set(labels), key=labels.count)
+                    labels.append((frame.label, frame.fold, frame.homogeneity))
+
+            votes = {}
+            sizeOfSegment = 0
+            for label in labels:
+                # print label
+                value = pow(4, self.iteration - label[1] - 1)
+                sizeOfSegment += value
+                value *= label[2]
+                if not label[0] in votes:
+                    votes[label[0]] = value
+                else:
+                    votes[label[0]] += value
+
+            label = max(votes.iteritems(), key=operator.itemgetter(1))[0]
+
+
+            print "Segment %i of size %i labeled as %i" % (
+                segment, sizeOfSegment, label)
+            #print 'Votes: %s gives us decision %i' % (votes, label)
             for frame in self.homogenous:
                 if frame.segment == segment:
                     frame.label = label
+
         # Removing the background
         self.heterogenous = []
         self.homogenous = \
