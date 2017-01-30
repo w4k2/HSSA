@@ -2,6 +2,7 @@ import scipy.io
 import numpy as np
 import random
 import weles
+import math
 
 SEED = 123
 random.seed(SEED)
@@ -12,19 +13,28 @@ class Window:
         base = pow(2, frame.fold)
 
         # Calculating size
-        width = frame.hs.cols / base
-        height = frame.hs.rows / base
+        width = float(frame.hs.cols) / base
+        height = float(frame.hs.rows) / base
 
         # Establishing position
         x = int(frame.location / base)
         y = int(frame.location % base)
-        self.top = width * x
-        self.left = height * y
+        self.top = int(width * x)
+        self.left = int(height * y)
         self.width = int(width)
         self.height = int(height)
+        '''
+        print '[C%i R%i L%i X%i Y%i] t:%i l:%i w:%i(%.2f) h:%i(%.2f)' %(
+            frame.hs.cols, frame.hs.rows,
+            frame.location, x, y,
+            self.top, self.left,
+            self.width, width,
+            self.height, height
+        )
+        '''
 
 class HSFrame:
-    def __init__(self, hs, points=250, fold=0, location=0):
+    def __init__(self, hs, points=50, fold=0, location=0):
         self.points = points  # amount of points to create mean signature
         self.hs = hs  # image
         self.fold = fold            # iteration, when frame was created

@@ -28,12 +28,15 @@ print dataset.samples[0].features[:4]
 
 # HSSA loop
 print "- do a HSSA loop"
-threshold = .98
-limit = 2
+threshold = 1
+limit = 8
 sgm = hssa.HSSA(img, threshold, limit)
 
 while not sgm.isComplete:
     print sgm
     sgm.step()
+    sgm.png('figures/steps/i%i.png' % sgm.iteration, True)
+    if sgm.iteration == limit:
+        break
 
 print sgm

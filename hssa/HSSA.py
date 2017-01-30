@@ -130,11 +130,13 @@ class HSSA:
     """
     ### Generating png preview
     """
-    def image(self, title = False, labels = False):
+    def png(self, title = False, labels = False):
+        # Generate title if not provided.
         if not title:
             title = 'hssa_i%i_t%.0f.png' % (
                 self.iteration,
                 1000 * self.threshold)
+        # Establish base resolution on a iterated power of 2. 
         base = pow(2, self.iteration)
         img = np.ones((base, base, 3))
         minN = 9999
