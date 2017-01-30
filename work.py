@@ -12,7 +12,7 @@ print '# Let\'s play'
 # Load salinasA image
 print "- load image"
 imagesDirectory = 'data/hsimages/'
-with open('%s%s' % (imagesDirectory, 'indianpines.json')) as data_file:
+with open('%s%s' % (imagesDirectory, 'pavia.json')) as data_file:
     dictionary = json.load(data_file)
 img = hssa.HS(dictionary)
 print img
@@ -28,7 +28,7 @@ print dataset.samples[0].features[:4]
 
 # HSSA loop
 print "- do a HSSA loop"
-threshold = .997
+threshold = .994
 limit = 8
 points = 9
 sgm = hssa.HSSA(img, threshold, limit, points)
