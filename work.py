@@ -18,8 +18,22 @@ img = hssa.HS(dictionary)
 print img
 
 # Weles export
+'''
 print "- export as Weles dataset"
 dataset = img.dataset()
 print dataset
 
 print dataset.samples[0].features[:4]
+'''
+
+# HSSA loop
+print "- do a HSSA loop"
+threshold = .98
+limit = 2
+sgm = hssa.HSSA(img, threshold, limit)
+
+while not sgm.isComplete:
+    print sgm
+    sgm.step()
+
+print sgm

@@ -107,6 +107,18 @@ class HSSA:
     ## Helper functions
 
     """
+    ### Status string
+    """
+    def __str__(self):
+        return "%s %s, iteration %i, %i heterogenous, %i homogenous" % (
+            "complete" if self.isComplete else "in progress",
+            self.hs.name,
+            self.iteration,
+            len(self.heterogenous),
+            len(self.homogenous)
+        )
+
+    """
     ### Preparing representation to work
     """
     def clean(self):
