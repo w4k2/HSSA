@@ -98,8 +98,9 @@ def test_dumb_hssa():
     """Is HSSA working?"""
     hs = loadImage()
     threshold = .98
+    jthreshold = .98
     limit = 2
-    sgm = hssa.HSSA(hs, threshold, limit)
+    sgm = hssa.HSSA(hs, threshold, jthreshold, limit)
     while not sgm.isComplete:
         sgm.step()
 
@@ -110,8 +111,9 @@ def test_limit_hssa():
     """Is HSSA working with limits?"""
     hs = loadImage()
     threshold = .98
+    jthreshold = .98
     limit = 4
-    sgm = hssa.HSSA(hs, threshold, limit)
+    sgm = hssa.HSSA(hs, threshold, jthreshold, limit)
     sgm.process()
 
     assert len(sgm.homogenous) > 0 and len(sgm.heterogenous) > 0
@@ -121,8 +123,9 @@ def test_hssa_final():
     """Production!"""
     hs = loadImage()
     threshold = .995
+    jthreshold = .995
     limit = 6
-    sgm = hssa.HSSA(hs, threshold, limit)
+    sgm = hssa.HSSA(hs, threshold, jthreshold, limit)
     sgm.process()
     sgm.post()
     representation = sgm.representation()
