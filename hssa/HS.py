@@ -2,6 +2,7 @@
 import scipy.io
 import numpy as np
 import weles
+import operator
 
 """
 A class to store and to use hypersectral image.
@@ -17,11 +18,30 @@ class HS:
         self.name = dictionary['name']
         self.classes = dictionary['classes']
 
+        #print type(self.image[(0,0)][0])
+
         # Getting in shape.
         shape = np.shape(self.image)
         self.rows = shape[0]
         self.cols = shape[1]
         self.bands = shape[2]
+
+        # Normalize
+        self.normA = []
+        self.normB = []
+        for sliceIdx in xrange(self.bands):
+            slice = self.slice(sliceIdx)
+            #print sliceIdx
+            minimum = np.min(slice)
+            maximum = np.max(slice)
+            self.normA.append(minimum)
+            self.normB.append(maximum)
+            #print slice
+            #print 'min %i max %i' % (minimum, maximum)
+        self.normB = map(operator.sub, self.normB, self.normA)
+        #print self.normA
+        #print self.normB
+
 
         # Searching for maximum value
         self.max = np.amax(self.image)
@@ -42,7 +62,7 @@ class HS:
     ### Getting signature
     """
     def signature(self, location):
-        return np.copy(self.image[location])
+        return (self.image[location].astype(float) - self.normA) / self.normB
 
     """
     ### Getting label

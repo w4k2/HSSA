@@ -41,7 +41,7 @@ while not sgm.isComplete:
     sgm.step()
     sgm.png('figures/steps/i%i.png' % sgm.iteration, False)
 
-    if sgm.iteration == limit:
+    if sgm.iteration == l:
         break
 
 print sgm

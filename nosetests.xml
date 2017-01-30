@@ -1,6 +1,27 @@
-<?xml version="1.0" encoding="UTF-8"?><testsuite name="nosetests" tests="11" errors="0" failures="0" skip="0"><testcase classname="test" name="test_loading" time="0.087"></testcase><testcase classname="test" name="test_signature" time="0.082"></testcase><testcase classname="test" name="test_slice" time="0.086"></testcase><testcase classname="test" name="test_hssa_init" time="0.083"></testcase><testcase classname="test" name="test_hssa_frame_signature" time="0.086"><system-out><![CDATA[F0|L0|S-1|L12|H0.952
-]]></system-out></testcase><testcase classname="test" name="test_hssa_homogeneity_measure" time="0.086"></testcase><testcase classname="test" name="test_is_dividing_working" time="0.207"></testcase><testcase classname="test" name="test_dumb_hssa" time="0.180"></testcase><testcase classname="test" name="test_limit_hssa" time="0.171"></testcase><testcase classname="test" name="test_hssa_final" time="3.622"><system-out><![CDATA[838
-]]></system-out></testcase><testcase classname="test" name="test_weles_pass" time="25.338"><system-out><![CDATA[{'acc': 0.9448325729501118, 'bac': 0.91381851887961907}
-{'acc': 0.94806486233962806, 'bac': 0.90076256493121964}
-{'acc': 0.78327242893210003, 'bac': 0.5}
+<?xml version="1.0" encoding="UTF-8"?><testsuite name="nosetests" tests="11" errors="0" failures="0" skip="0"><testcase classname="test" name="test_loading" time="0.091"><system-out><![CDATA[14
+]]></system-out></testcase><testcase classname="test" name="test_signature" time="0.083"><system-out><![CDATA[14
+]]></system-out></testcase><testcase classname="test" name="test_slice" time="0.086"><system-out><![CDATA[14
+]]></system-out></testcase><testcase classname="test" name="test_hssa_init" time="0.086"><system-out><![CDATA[14
+]]></system-out></testcase><testcase classname="test" name="test_hssa_frame_signature" time="0.088"><system-out><![CDATA[14
+F0|L0|S-1|L0|H0.965
+]]></system-out></testcase><testcase classname="test" name="test_hssa_homogeneity_measure" time="0.086"><system-out><![CDATA[14
+]]></system-out></testcase><testcase classname="test" name="test_is_dividing_working" time="0.169"><system-out><![CDATA[14
+]]></system-out></testcase><testcase classname="test" name="test_dumb_hssa" time="0.154"><system-out><![CDATA[14
+]]></system-out></testcase><testcase classname="test" name="test_limit_hssa" time="0.139"><system-out><![CDATA[14
+]]></system-out></testcase><testcase classname="test" name="test_hssa_final" time="3.607"><system-out><![CDATA[14
+Segment 0 of size 71 labeled as 1
+Segment 1 of size 269 labeled as 12
+Segment 2 of size 208 labeled as 10
+Segment 3 of size 136 labeled as 13
+Segment 4 of size 123 labeled as 14
+Segment 5 of size 58 labeled as 10
+Segment 6 of size 1 labeled as 0
+Segment 7 of size 14 labeled as 0
+Segment 8 of size 3 labeled as 0
+6 classes detected
+865
+]]></system-out></testcase><testcase classname="test" name="test_weles_pass" time="23.164"><system-out><![CDATA[14
+{'acc': 0.9447124022757919, 'bac': 0.91332847340727219}
+{'acc': 0.94499262995662081, 'bac': 0.89436492845776761}
+{'acc': 0.78593442192483098, 'bac': 0.5}
 ]]></system-out></testcase></testsuite>

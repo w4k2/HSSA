@@ -18,7 +18,7 @@ class HSSA:
     """
     ## Initialization
     """
-    def __init__(self, hs, threshold, limit=99, points=20):
+    def __init__(self, hs, threshold, jThreshold, limit=99, points=20):
         """
         Assign:
 
@@ -28,6 +28,7 @@ class HSSA:
         """
         self.hs = hs
         self.threshold = threshold
+        self.jThreshold = jThreshold
         self.limit = limit
         self.points = points
 
@@ -55,7 +56,7 @@ class HSSA:
     def step(self):
         self.iteration += 1
         self.separate()
-        # self.merge()
+
         for frame in self.homogenous:
             frame.setHomo()
         self.isComplete = len(self.heterogenous) == 0
@@ -89,8 +90,8 @@ class HSSA:
                 for j in xrange(i):
                     cmpFrame = self.homogenous[j]
                     similarity = \
-                        1 - (np.mean(np.std([frame.signature, cmpFrame.signature], axis=0)) / self.hs.max)
-                    if similarity > self.threshold:
+                        1 - np.mean(np.std([frame.signature, cmpFrame.signature], axis=0))
+                    if similarity > self.jThreshold:
                         frame.segment = cmpFrame.segment
                         break
                 if frame.segment == -1:
@@ -118,7 +119,7 @@ class HSSA:
     ### Status string
     """
     def __str__(self):
-        return "%s %s, iteration %i, %i heterogenous, %i homogenous, %i segments" % (
+        return "%s %s, i = %i, %i het, %i hom, s = %i" % (
             "complete" if self.isComplete else "in progress",
             self.hs.name,
             self.iteration,
@@ -153,37 +154,38 @@ class HSSA:
         base = pow(2, self.iteration)
         img = np.ones((base, base, 3))
 
-        # Scale intensivity according to values in FLR-s.
-        minN = min(union, key=attrgetter('intensity')).intensity
-        maxN = max(union, key=attrgetter('intensity')).intensity
+        if len(union):
+            # Scale intensivity according to values in FLR-s.
+            minN = min(union, key=attrgetter('intensity')).intensity
+            maxN = max(union, key=attrgetter('intensity')).intensity
 
-        # Iterate every frame
-        for frame in union:
-            amount = pow(2, frame.fold)
-            length = base / amount
-            intensity = (frame.intensity - minN) / (maxN - minN)
-            hue = 0
-            if frame.isHomo:
-                if labels:
-                    hue = frame.label / float(self.hs.maxlabel)
-                else:
-                    hue = frame.segment / float(2 * len(self.hs.classes))
-                    if self.segments > 2 * len(self.hs.classes):
-                        hue = frame.segment / float(self.segments)
-            x = frame.location % amount
-            y = frame.location / amount
-            for i in xrange(length):
-                for j in xrange(length):
-                    if frame.isHomo:
-                        if labels:
-                            img[length * x + i, length * y + j] = \
-                                colors.hsv_to_rgb([hue, .75, .75])
+            # Iterate every frame
+            for frame in union:
+                amount = pow(2, frame.fold)
+                length = base / amount
+                intensity = (frame.intensity - minN) / (maxN - minN)
+                hue = 0
+                if frame.isHomo:
+                    if labels:
+                        hue = frame.label / float(self.hs.maxlabel)
+                    else:
+                        hue = frame.segment / float(2 * len(self.hs.classes))
+                        if self.segments > 2 * len(self.hs.classes):
+                            hue = frame.segment / float(self.segments)
+                x = frame.location % amount
+                y = frame.location / amount
+                for i in xrange(length):
+                    for j in xrange(length):
+                        if frame.isHomo:
+                            if labels:
+                                img[length * x + i, length * y + j] = \
+                                    colors.hsv_to_rgb([hue, .75, .75])
+                            else:
+                                img[length * x + i, length * y + j] = \
+                                    colors.hsv_to_rgb([hue, 1, .5 + intensity / 2])
                         else:
                             img[length * x + i, length * y + j] = \
-                                colors.hsv_to_rgb([hue, 1, .5 + intensity / 2])
-                    else:
-                        img[length * x + i, length * y + j] = \
-                            colors.hsv_to_rgb([0, 0, intensity])
+                                colors.hsv_to_rgb([0, 0, intensity])
 
         # Plot
         plt.imshow(img, interpolation="nearest")
@@ -203,6 +205,9 @@ class HSSA:
     """
     def separate(self):
         # separating
+        #print 'Separating'
+        #for frame in self.heterogenous:
+        #    print frame
         self.homogenous.extend(
             [x for x in self.heterogenous if x.homogeneity > self.threshold])
         self.heterogenous = \
@@ -213,6 +218,11 @@ class HSSA:
     """
     def post(self):
         analysis = []
+        # Removing the background
+        self.heterogenous = []
+        self.homogenous = \
+            [x for x in self.homogenous if x.label != 0]
+
         # Analyzing segment by segment
         for segment in xrange(self.segments):
             labels = []
@@ -220,30 +230,38 @@ class HSSA:
                 if frame.segment == segment:
                     labels.append((frame.label, frame.fold, frame.homogeneity))
 
-            votes = {}
-            sizeOfSegment = 0
-            for label in labels:
-                # print label
-                value = pow(4, self.iteration - label[1] - 1)
-                sizeOfSegment += value
-                value *= label[2]
-                if not label[0] in votes:
-                    votes[label[0]] = value
-                else:
-                    votes[label[0]] += value
+            if len(labels):
+                votes = {}
+                sizeOfSegment = 0
+                for label in labels:
+                    # print label
+                    value = pow(4, self.iteration - label[1] - 1)
+                    sizeOfSegment += value
+                    value *= label[2]
+                    if not label[0] in votes:
+                        votes[label[0]] = value
+                    else:
+                        votes[label[0]] += value
 
-            label = max(votes.iteritems(), key=operator.itemgetter(1))[0]
-            if label > self.maxlabel:
-                self.maxlabel = label
-            if not label in analysis:
-                analysis.append(label)
+                # Zmniejszenie roli tła
+                #print votes
+                if 0 in votes:
+                    # print "%f is too large" % votes[0]
+                    votes[0] /= 3
+                #print votes
 
-            print "Segment %i of size %i labeled as %i" % (
-                segment, sizeOfSegment, label)
-            #print 'Votes: %s gives us decision %i' % (votes, label)
-            for frame in self.homogenous:
-                if frame.segment == segment:
-                    frame.label = label
+                label = max(votes.iteritems(), key=operator.itemgetter(1))[0]
+                if label > self.maxlabel:
+                    self.maxlabel = label
+                if not label in analysis:
+                    analysis.append(label)
+
+                #print "Segment %i of size %i labeled as %i" % (
+                #    segment, sizeOfSegment, label)
+                #print 'Votes: %s gives us decision %i' % (votes, label)
+                for frame in self.homogenous:
+                    if frame.segment == segment:
+                        frame.label = label
 
         # Removing the background
         self.heterogenous = []

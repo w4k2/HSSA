@@ -103,6 +103,7 @@ class HSFrame:
         return signatures
 
     def calculate(self):
+        #print '### Calculate'
         # Getting window parameters
         width = self.window.width
         height = self.window.height
@@ -115,12 +116,9 @@ class HSFrame:
         if self.points > stop:
             points = stop
 
-
         # Getting signatures
-        signatures = []#[self.hs.signature((left, top))]
-        labels = []#[self.hs.label((left, top))]
-        #print self.window
-        #print points
+        signatures = []
+        labels = []
         for item in xrange(0, points):
             index = random.randrange(stop)
             x = int(index / width)
@@ -128,13 +126,17 @@ class HSFrame:
             signature = self.hs.signature((left + x, top + y))
             signatures.append(signature)
             labels.append(self.hs.label((left + x, top + y)))
+            #print '## ITEM %s' % signature[:3]
 
         self.signature = np.mean(signatures, axis=0)
+        #print '## SIGN %s' % self.signature[:3]
 
         self.label = max(set(labels), key=labels.count)
         # homogeneity as a mean standardDeviation
         self.homogeneity = \
-            1 - (np.mean(np.std(signatures, axis=0)) / self.hs.max)
+            1 - np.mean(np.std(signatures, axis=0))
+        #print '## HOMO %f' % self.homogeneity
+        #print '%f' % (1 - np.mean(np.std(signatures, axis=0)))
 
         self.intensity = np.mean(self.signature)
 
