@@ -62,6 +62,9 @@ class HSSA:
             newHeterogenous.extend(frame.divide())
         self.heterogenous = newHeterogenous
 
+        # Merge procedure at every iteration
+        self.merge()
+
     """
     ## Whole loop
     """
@@ -149,7 +152,7 @@ class HSSA:
         minN = min(union, key=attrgetter('intensity')).intensity
         maxN = max(union, key=attrgetter('intensity')).intensity
 
-        # Hetero
+        # Iterate every frame
         for frame in union:
             amount = pow(2, frame.fold)
             length = base / amount
@@ -169,13 +172,27 @@ class HSSA:
             for i in xrange(length):
                 for j in xrange(length):
                     if frame.isHomo:
-                        img[length * x + i, length * y + j] = \
-                            colors.hsv_to_rgb([hue, 1, .5 + intensity / 2])
+                        if labels:
+                            img[length * x + i, length * y + j] = \
+                                colors.hsv_to_rgb([hue, .75, .75])
+
+                        else:
+                            img[length * x + i, length * y + j] = \
+                                colors.hsv_to_rgb([hue, 1, .5 + intensity / 2])
                     else:
                         img[length * x + i, length * y + j] = \
                             colors.hsv_to_rgb([0, 0, intensity])
 
-        imgplot = plt.imshow(img, interpolation="nearest")
+        # Plot
+        plt.imshow(img, interpolation="nearest")
+        plt.axis('off')
+        plt.title('%s image, iteration %i, %i segments\n%i homo / %i hetero' % (
+            self.hs.name,
+            self.iteration,
+            self.segments,
+            len(self.homogenous),
+            len(self.heterogenous)
+        ))
         plt.savefig(title)
 
     """
