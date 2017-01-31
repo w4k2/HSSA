@@ -1,10 +1,18 @@
-<?xml version="1.0" encoding="UTF-8"?><testsuite name="nosetests" tests="8" errors="0" failures="0" skip="0"><testcase classname="test" name="test_loading" time="0.130"><system-out><![CDATA[14
-]]></system-out></testcase><testcase classname="test" name="test_signature" time="0.116"><system-out><![CDATA[14
-]]></system-out></testcase><testcase classname="test" name="test_slice" time="0.121"><system-out><![CDATA[14
-]]></system-out></testcase><testcase classname="test" name="test_hssa_init" time="0.119"><system-out><![CDATA[14
-]]></system-out></testcase><testcase classname="test" name="test_hssa_frame_signature" time="0.122"><system-out><![CDATA[14
+<?xml version="1.0" encoding="UTF-8"?><testsuite name="nosetests" tests="11" errors="0" failures="0" skip="0"><testcase classname="test" name="test_loading" time="0.171"><system-out><![CDATA[14
+]]></system-out></testcase><testcase classname="test" name="test_signature" time="0.496"><system-out><![CDATA[14
+]]></system-out></testcase><testcase classname="test" name="test_slice" time="0.243"><system-out><![CDATA[14
+]]></system-out></testcase><testcase classname="test" name="test_hssa_init" time="0.223"><system-out><![CDATA[14
+]]></system-out></testcase><testcase classname="test" name="test_hssa_frame_signature" time="0.172"><system-out><![CDATA[14
 F0|L0|S-1|L0|H0.891
-]]></system-out></testcase><testcase classname="test" name="test_hssa_homogeneity_measure" time="0.118"><system-out><![CDATA[14
-]]></system-out></testcase><testcase classname="test" name="test_is_dividing_working" time="0.319"><system-out><![CDATA[14
-]]></system-out></testcase><testcase classname="test" name="test_dumb_hssa" time="56.836"><system-out><![CDATA[14
+]]></system-out></testcase><testcase classname="test" name="test_hssa_homogeneity_measure" time="0.131"><system-out><![CDATA[14
+]]></system-out></testcase><testcase classname="test" name="test_is_dividing_working" time="0.354"><system-out><![CDATA[14
+]]></system-out></testcase><testcase classname="test" name="test_dumb_hssa" time="6.614"><system-out><![CDATA[14
+]]></system-out></testcase><testcase classname="test" name="test_limit_hssa" time="1.550"><system-out><![CDATA[14
+]]></system-out></testcase><testcase classname="test" name="test_hssa_final" time="7.703"><system-out><![CDATA[14
+6 classes detected
+302
+]]></system-out></testcase><testcase classname="test" name="test_weles_pass" time="26.196"><system-out><![CDATA[14
+{'acc': 0.94489251634926519, 'bac': 0.91254106800067514}
+{'acc': 0.94683372711638436, 'bac': 0.89762058010047896}
+{'acc': 0.78593444470500473, 'bac': 0.5}
 ]]></system-out></testcase></testsuite>

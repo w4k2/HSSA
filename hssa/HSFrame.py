@@ -102,6 +102,21 @@ class HSFrame:
             signatures.append(sample.features)
         return signatures
 
+    def samples(self, amount):
+        width = self.window.width
+        height = self.window.height
+        top = self.window.top
+        left = self.window.left
+        stop = height * width
+        samples = []
+        for item in xrange(0, amount):
+            index = random.randrange(stop)
+            x = int(index / width)
+            y = int(index % width)
+            sample = self.hs.sample((left + x, top + y))
+            samples.append(sample)
+        return samples
+
     def calculate(self):
         #print '### Calculate'
         # Getting window parameters

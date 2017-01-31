@@ -42,7 +42,7 @@ class HSSA:
         self.iteration = 0
         self.isComplete = False
         self.segments = 0
-
+        self.classes = {}
         self.maxlabel = 0
 
         # Initialize sets of frames and set up representation.
@@ -100,7 +100,53 @@ class HSSA:
 
     """
     ## Algorithm output
+
+    - 0 — one per class
+    - 1 — one per frame
     """
+    def train(self, c):
+        train = []
+        for label in self.classes:
+            collection = self.classes[label]
+            #print '- %i frames for label %i:' % (
+            #    len(collection),
+            #    label
+            #)
+
+            # One per class
+            if c == 0:
+                buffer = []
+                for frame in collection:
+                    signature = frame.signature
+                    buffer.append(signature)
+                    #for sample in samples:
+                    #    print "\t- %s" % sample.features[:3]
+                signature = np.mean(buffer, axis=0)
+                sample = weles.Sample(
+                    signature,
+                    self.hs.reverseClasses[label]
+                    )
+                train.append(sample)
+            # One per frame
+            elif c == 1:
+                #buffer = []
+                for frame in collection:
+                    samples = frame.samples(3)
+                    signature = frame.signature # one
+                    sample = weles.Sample(
+                        signature,
+                        self.hs.reverseClasses[label]
+                        )
+                    train.append(sample)
+                    #print "\tS=%s:" % signature[:3]
+                    #buffer.append(signature)
+                    #for sample in samples:
+                    #    print "\t- %s" % sample.features[:3]
+
+
+        # print self.classes
+        return train
+
     def representation(self):
         result = []
         for frame in self.homogenous:
@@ -217,7 +263,6 @@ class HSSA:
     ### Postprocessing
     """
     def post(self):
-        analysis = []
         # Removing the background
         self.heterogenous = []
         self.homogenous = \
@@ -253,8 +298,6 @@ class HSSA:
                 label = max(votes.iteritems(), key=operator.itemgetter(1))[0]
                 if label > self.maxlabel:
                     self.maxlabel = label
-                if not label in analysis:
-                    analysis.append(label)
 
                 #print "Segment %i of size %i labeled as %i" % (
                 #    segment, sizeOfSegment, label)
@@ -262,6 +305,10 @@ class HSSA:
                 for frame in self.homogenous:
                     if frame.segment == segment:
                         frame.label = label
+                        if not label in self.classes:
+                            self.classes[label] = [frame]
+                        else:
+                            self.classes[label].append(frame)
 
         # Removing the background
         self.heterogenous = []
@@ -269,4 +316,4 @@ class HSSA:
             [x for x in self.homogenous if x.label != 0]
 
         # print analysis
-        print "%i classes detected" % len(analysis)
+        print "%i classes detected" % len(self.classes)

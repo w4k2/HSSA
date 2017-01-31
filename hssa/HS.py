@@ -17,6 +17,7 @@ class HS:
         self.gt = self.loadMatFromTuple(dictionary['gt'])
         self.name = dictionary['name']
         self.classes = dictionary['classes']
+        self.reverseClasses = None
 
         #print type(self.image[(0,0)][0])
 
@@ -91,15 +92,20 @@ class HS:
         dataset = weles.Dataset()
         db_name = self.name
         source_samples = []
-        classes = {}
+        self.reverseClasses = {}
         for x in xrange(self.rows):
             for y in xrange(self.cols):
                 sample = self.sample((x, y))
                 source_samples.append(sample)
-                if not sample.label in classes:
-                    classes.update({sample.label: len(classes)})
-                sample.label = classes[sample.label]
-        dataset.fill(db_name, source_samples, classes)
+                if not sample.label in self.reverseClasses:
+                    self.reverseClasses.update({sample.label: len(self.reverseClasses)})
+                sample.label = self.reverseClasses[sample.label]
+        dataset.fill(
+            db_name,
+            source_samples,
+            self.reverseClasses
+        )
+        print '# Classes\n%s' % self.reverseClasses
         return dataset
 
 
