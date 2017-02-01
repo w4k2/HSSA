@@ -13,14 +13,14 @@ print '# Let\'s play'
 # Load salinasA image
 print "- load image"
 imagesDirectory = 'data/hsimages/'
-with open('%s%s' % (imagesDirectory, 'pavia.json')) as data_file:
+with open('%s%s' % (imagesDirectory, 'indianpines.json')) as data_file:
     dictionary = json.load(data_file)
 img = hssa.HS(dictionary)
 print img
 
 # Weles load
 print "- loading a Weles dataset"
-dataset = weles.Dataset('pavia.csv')
+dataset = weles.Dataset('/Users/xehivs/hs/indianpines.csv')
 print dataset
 
 # HSSA loop
