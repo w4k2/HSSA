@@ -101,8 +101,9 @@ class HSSA:
     """
     ## Algorithm output
 
-    - 0 — one per class
-    - 1 — one per frame
+    - 0 — one mean signature from mean of frames
+    - 1 — one mean signature per frame
+    - 2 - n random signatures from every frame
     """
     def train(self, c):
         train = []
@@ -131,7 +132,7 @@ class HSSA:
             elif c == 1:
                 #buffer = []
                 for frame in collection:
-                    samples = frame.samples(3)
+                    #samples = frame.samples(3)
                     signature = frame.signature # one
                     sample = weles.Sample(
                         signature,
@@ -142,6 +143,17 @@ class HSSA:
                     #buffer.append(signature)
                     #for sample in samples:
                     #    print "\t- %s" % sample.features[:3]
+            else:
+                #buffer = []
+                for frame in collection:
+                    signatures = frame.signatures(c)
+                    signature = frame.signature # one
+                    for signature in signatures:
+                        sample = weles.Sample(
+                            signature,
+                            self.hs.reverseClasses[label]
+                            )
+                        train.append(sample)
 
 
         # print self.classes

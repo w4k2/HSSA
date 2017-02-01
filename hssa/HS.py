@@ -17,7 +17,6 @@ class HS:
         self.gt = self.loadMatFromTuple(dictionary['gt'])
         self.name = dictionary['name']
         self.classes = dictionary['classes']
-        self.reverseClasses = None
 
         #print type(self.image[(0,0)][0])
 
@@ -47,7 +46,9 @@ class HS:
         # Searching for maximum value
         self.max = np.amax(self.image)
         self.maxlabel = np.amax(self.gt)
-        print self.maxlabel
+
+        self.reverseClasses = None
+        self.prepareReverse()
 
     ## Operators
 
@@ -84,6 +85,14 @@ class HS:
     """
     def loadMatFromTuple(self, entry):
         return scipy.io.loadmat(entry[0])[entry[1]]
+
+    def prepareReverse(self):
+        self.reverseClasses = {}
+        for x in xrange(self.rows):
+            for y in xrange(self.cols):
+                label = self.label((x, y))
+                if not label in self.reverseClasses:
+                    self.reverseClasses.update({label: len(self.reverseClasses)})
 
     """
     ## Exporting Weles dataset

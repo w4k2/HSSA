@@ -1,5 +1,12 @@
 [
   {
+    "image": "salinasA.json",
+    "t": 0.98,
+    "j": 0.99,
+    "l": 6,
+    "p": 9
+  },
+  {
     "image": "pavia.json",
     "t": 0.98,
     "j": 0.992,

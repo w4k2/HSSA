@@ -19,8 +19,8 @@ img = hssa.HS(dictionary)
 print img
 
 # Weles export
-print "- export as Weles dataset"
-dataset = img.dataset()
+print "- loading a Weles dataset"
+dataset = weles.Dataset('salinasA.csv')
 print dataset
 print dataset.samples[0].features[:4]
 print len(dataset.samples[0].features)
@@ -28,7 +28,7 @@ print len(dataset.samples[0].features)
 # HSSA loop
 print "- do a HSSA loop"
 t = .98
-j = .992
+j = .99
 l = 6
 p = 9
 
@@ -50,32 +50,23 @@ sgm.png('figures/steps/p1.png', True)
 print sgm
 
 # Pure KNN
-configuration = {
-    'k': 1
-}
-clf = weles.sklKNN(dataset, configuration).quickLoop()
-print "%i samples [ACC = %.3f, BAC = %.3f]" % (
+clf = weles.sklDTC(dataset).quickLoop()
+print "%4i samples [ACC = %.3f, BAC = %.3f]" % (
     len(dataset.samples),
     clf['acc'], clf['bac']
 )
 
 dataset.injectTrain(sgm.train(0))
-clf = weles.sklKNN(dataset, configuration).quickLoop()
+clf = weles.sklDTC(dataset).quickLoop()
 print "%4i samples [ACC = %.3f, BAC = %.3f]" % (
     len(dataset.samples),
     clf['acc'], clf['bac']
 )
 
-dataset.injectTrain(sgm.train(1))
-clf = weles.sklKNN(dataset, configuration).quickLoop()
-print "%4i samples [ACC = %.3f, BAC = %.3f]" % (
-    len(dataset.samples),
-    clf['acc'], clf['bac']
-)
-
-dataset.injectTrain(sgm.train(2))
-clf = weles.sklKNN(dataset, configuration).quickLoop()
-print "%4i samples [ACC = %.3f, BAC = %.3f]" % (
-    len(dataset.samples),
-    clf['acc'], clf['bac']
-)
+for c in xrange(1,3):
+    dataset.injectTrain(sgm.train(c))
+    clf = weles.sklDTC(dataset).quickLoop()
+    print "%4i samples [ACC = %.3f, BAC = %.3f]" % (
+        len(dataset.samples),
+        clf['acc'], clf['bac']
+    )

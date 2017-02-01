@@ -92,14 +92,13 @@ class HSFrame:
         top = self.window.top
         left = self.window.left
         stop = height * width
-        signatures = [self.hs.signature((left, top))]
-        for item in xrange(0, amount - 1):
+        signatures = []
+        for item in xrange(0, amount if amount < stop else stop):
             index = random.randrange(stop)
             x = int(index / width)
             y = int(index % width)
-            sample = self.hs.sample((left + x, top + y))
             signature = self.hs.signature((left + x, top + y))
-            signatures.append(sample.features)
+            signatures.append(signature)
         return signatures
 
     def samples(self, amount):
