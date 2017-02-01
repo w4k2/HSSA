@@ -88,11 +88,10 @@ class HS:
 
     def prepareReverse(self):
         self.reverseClasses = {}
-        for x in xrange(self.rows):
-            for y in xrange(self.cols):
-                label = self.label((x, y))
-                if not label in self.reverseClasses:
-                    self.reverseClasses.update({label: len(self.reverseClasses)})
+        for (x,y), value in np.ndenumerate(self.gt):
+            label = self.label((x, y))
+            if not label in self.reverseClasses:
+                self.reverseClasses.update({label: len(self.reverseClasses)})
 
     """
     ## Exporting Weles dataset
