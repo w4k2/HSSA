@@ -78,7 +78,7 @@ class HSSA:
             if self.iteration == self.limit:
                 break
             self.step()
-        self.merge()
+        self.post()
 
     """
     ## Merging process
@@ -328,4 +328,4 @@ class HSSA:
             [x for x in self.homogenous if x.label != 0]
 
         # print analysis
-        print "%i classes detected" % len(self.classes)
+        # print "%i classes detected" % len(self.classes)
