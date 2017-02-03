@@ -248,6 +248,7 @@ class HSSA:
         # Plot
         plt.imshow(img, interpolation="nearest")
         plt.axis('off')
+        '''
         plt.title('%s image, iteration %i, t = %.3f\n%i homo / %i hetero / %i segments' % (
             self.hs.name,
             self.iteration,
@@ -256,7 +257,8 @@ class HSSA:
             len(self.heterogenous),
             self.segments
         ))
-        plt.savefig(title)
+        '''
+        plt.savefig(title, bbox_inches='tight', pad_inches=0)
 
     """
     ### Separate frames
