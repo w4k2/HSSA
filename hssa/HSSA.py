@@ -329,3 +329,12 @@ class HSSA:
 
         # print analysis
         # print "%i classes detected" % len(self.classes)
+
+    def cfgTag(self):
+        return 'hssa_im_%s_ht_%.3f_jt_%.3f_l_%i_p_%i' % (
+            self.hs.name,
+            self.threshold,
+            self.jThreshold,
+            self.limit,
+            self.points
+        )

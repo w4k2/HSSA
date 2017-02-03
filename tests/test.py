@@ -114,7 +114,10 @@ def test_limit_hssa():
     jthreshold = .98
     limit = 4
     sgm = hssa.HSSA(hs, threshold, jthreshold, limit)
+    print 'TRY'
+    print 'Config tag: %s' % sgm.cfgTag()
     sgm.process()
+    print 'Config tag: %s' % sgm.cfgTag()
 
     # assert len(sgm.homogenous) > 0 and len(sgm.heterogenous) > 0
 
@@ -126,6 +129,7 @@ def test_hssa_final():
     jthreshold = .995
     limit = 6
     sgm = hssa.HSSA(hs, threshold, jthreshold, limit)
+    print 'Config tag: %s' % sgm.cfgTag()
     sgm.process()
     sgm.post()
     representation = sgm.representation()
