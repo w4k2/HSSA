@@ -18,7 +18,7 @@ class HSSA:
     """
     ## Initialization
     """
-    def __init__(self, hs, threshold, jThreshold, limit=99, points=20):
+    def __init__(self, hs, threshold, jThreshold, limit=99, points=20, stopAutomerge=False):
         """
         Assign:
 
@@ -31,6 +31,8 @@ class HSSA:
         self.jThreshold = jThreshold
         self.limit = limit
         self.points = points
+
+        self.stopAutomerge = stopAutomerge
 
         """
         And initialize:
@@ -68,7 +70,9 @@ class HSSA:
         self.heterogenous = newHeterogenous
 
         # Merge procedure at every iteration
-        self.merge()
+        if not self.stopAutomerge:
+            print 'Automerge'
+            self.merge()
 
     """
     ## Whole loop
@@ -198,7 +202,7 @@ class HSSA:
     """
     ### Generating png preview
     """
-    def png(self, title = False, labels = False):
+    def png(self, title = False, labels = False, segments = False):
         # Join FLR-s
         union = self.heterogenous + self.homogenous
 
@@ -227,28 +231,38 @@ class HSSA:
                     if labels:
                         hue = frame.label / float(self.hs.maxlabel)
                     else:
-                        hue = frame.segment / float(2 * len(self.hs.classes))
-                        if self.segments > 2 * len(self.hs.classes):
+                        hue = frame.segment / 17.
+                        if self.segments > 17:
                             hue = frame.segment / float(self.segments)
                 x = frame.location % amount
                 y = frame.location / amount
                 for i in xrange(length):
                     for j in xrange(length):
                         if frame.isHomo:
+                            # Homogeniczna poetykietowana
                             if labels:
                                 img[length * x + i, length * y + j] = \
                                     colors.hsv_to_rgb([hue, .75, .75])
+                            # Homogeniczna nieetykietowana
                             else:
-                                img[length * x + i, length * y + j] = \
-                                    colors.hsv_to_rgb([hue, 1, .5 + intensity / 2])
+                                if segments:
+                                    # Homogeniczna z segmentami
+                                    img[length * x + i, length * y + j] = \
+                                        colors.hsv_to_rgb([hue, 1, .5 + intensity / 4])
+
+                                else:
+                                    # Homogeniczna naga
+                                    img[length * x + i, length * y + j] = \
+                                        colors.hsv_to_rgb([0, 0, .1 + intensity / 4])
                         else:
+                            # Heterogeniczna
                             img[length * x + i, length * y + j] = \
-                                colors.hsv_to_rgb([0, 0, intensity])
+                                colors.hsv_to_rgb([0, 0, .75 + intensity/4])
 
         # Plot
         plt.imshow(img, interpolation="nearest")
         plt.axis('off')
-        '''
+        #'''
         plt.title('%s image, iteration %i, t = %.3f\n%i homo / %i hetero / %i segments' % (
             self.hs.name,
             self.iteration,
@@ -257,8 +271,8 @@ class HSSA:
             len(self.heterogenous),
             self.segments
         ))
-        '''
-        plt.savefig(title, bbox_inches='tight', pad_inches=0)
+        #'''
+        plt.savefig(title)
 
     """
     ### Separate frames

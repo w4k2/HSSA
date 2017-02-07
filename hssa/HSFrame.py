@@ -48,7 +48,7 @@ class HSFrame:
         self.points = points  # amount of points to create mean signature
         self.hs = hs  # image
         self.fold = fold            # iteration, when frame was created
-        self.location = location  # iteration based frame location
+        self.location = location    # iteration based frame location
         self.segment = -1  # segment identifier
         self.label = -1  # class label given by the expert for region
         self.homogeneity = 0  # homogeneity measure

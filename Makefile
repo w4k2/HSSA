@@ -1,7 +1,7 @@
 init:
 	pip install -U -I -r requirements.txt
 
-install: test
+install: #test
 	python setup.py install
 
 getData:
