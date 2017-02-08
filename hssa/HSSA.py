@@ -71,7 +71,6 @@ class HSSA:
 
         # Merge procedure at every iteration
         if not self.stopAutomerge:
-            print 'Automerge'
             self.merge()
 
     """

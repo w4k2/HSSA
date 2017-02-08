@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import matplotlib.pyplot as plt
 import scipy.io
 import numpy as np
 import weles
@@ -51,6 +52,70 @@ class HS:
         self.prepareReverse()
 
     ## Operators
+
+    def signatures(self):
+        labels = set()
+        result = {}
+        # Establish list of labels, according to GT
+        for row in self.gt:
+            for item in row:
+                if item not in labels:
+                    labels.add(item)
+        # Calculate mean signature for every label
+        for label in labels:
+            signatures = []
+            for x, row in enumerate(self.gt):
+                for y, item in enumerate(row):
+                    if item == label:
+                        signatures.append(self.signature((x, y)))
+            result[label] = np.mean(signatures, axis = 0)
+        # return the result
+        return result
+
+    def signaturesPNG(self, filename):
+        signatures = self.signatures()
+
+        # Plot size
+        plt.figure(figsize=(10, 6))
+
+        # Remove the plot frame lines. They are unnecessary chartjunk.
+        ax = plt.subplot(111)
+        ax.spines["top"].set_visible(False)
+        ax.spines["right"].set_visible(False)
+        ax.spines["left"].set_visible(False)
+
+        # Limit the range of the plot to only where the data is.
+        # Avoid unnecessary whitespace.
+        plt.ylim(0, 1)
+        plt.xlim(0, self.bands)
+
+        # Make sure your axis ticks are large enough to be easily read.
+        # You don't want your viewers squinting to read your plot.
+        plt.yticks(np.arange(0, 1, .1), [str(x) + "%" for x in range(0, 91, 10)], fontsize=14)
+        plt.xticks(fontsize=14)
+
+        # Provide tick lines across the plot to help your viewers trace along
+        # the axis ticks. Make sure that the lines are light and small so they
+        # don't obscure the primary data lines.
+        for y in np.arange(.1, .91, .1):
+            plt.plot(range(self.bands), [y] * len(range(self.bands)), "--", lw=0.5, color="black", alpha=0.3)
+
+        # Remove the tick marks; they are unnecessary with the tick lines we just plotted.
+        plt.tick_params(axis="both", which="both", bottom="on", top="off",
+                        labelbottom="on", left="off", right="off", labelleft="on")
+
+        # Actually plot signatures
+        for item in signatures:
+            line, = plt.plot(
+                xrange(self.bands),
+                signatures[item],
+                linewidth = 1 )
+            line.set_antialiased(True)
+
+        plt.xlabel('Band')
+        plt.ylabel('Normalized reflectance')
+
+        plt.savefig(filename)
 
     """
     ### Getting sample
