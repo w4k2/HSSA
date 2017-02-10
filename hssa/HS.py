@@ -2,6 +2,7 @@
 import matplotlib.pyplot as plt
 import scipy.io
 import numpy as np
+from scipy import ndimage
 import weles
 import operator
 
@@ -75,8 +76,13 @@ class HS:
     def signaturesPNG(self, filename):
         signatures = self.signatures()
 
+        # use LaTeX
+        #plt.rc('text', usetex=True)
+        #plt.rc('font', family='serif')
+        #rcParams['font.sans-serif'] = ['Tahoma']
+
         # Plot size
-        plt.figure(figsize=(10, 6))
+        plt.figure(figsize=(11, 5.5))
 
         # Remove the plot frame lines. They are unnecessary chartjunk.
         ax = plt.subplot(111)
@@ -115,7 +121,7 @@ class HS:
         plt.xlabel('Band')
         plt.ylabel('Normalized reflectance')
 
-        plt.savefig(filename)
+        plt.savefig(filename, bbox_inches='tight')
 
     """
     ### Getting sample
@@ -144,6 +150,38 @@ class HS:
         return np.copy(self.image[:, :, band])
 
     ## Helper functions
+
+    def dynamicsTensor(self, slice, ksize):
+        layers = ksize[0] * ksize[1]
+        tensor = np.zeros((self.rows, self.cols, layers))
+        i = 0
+        for x in xrange(ksize[0]):
+            for y in xrange(ksize[1]):
+                kernel = np.zeros(ksize)
+                kernel[x,y] = 1.
+
+                smoothed = ndimage.convolve(slice, kernel, mode='reflect', cval=0.0)
+                tensor[:,:,i] = smoothed
+                i += 1
+
+        return tensor
+
+
+    def edges(self, ksize = (3, 3)):
+        edges3d = np.zeros(np.shape(self.image))
+        for sid in xrange(self.bands):
+            slice = self.slice(sid)
+
+            tensor = self.dynamicsTensor(slice, ksize)
+
+            edges2d = np.subtract(
+                np.amax(tensor, axis=2),
+                np.amin(tensor, axis=2)
+            )
+
+            edges3d[:,:,sid] = edges2d
+
+        return edges3d
 
     """
     ## Loading from .mat file
