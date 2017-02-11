@@ -193,12 +193,14 @@ class HS:
 
         return edges3d
 
-    def edgesFilter(self, edges3d):
+    def edgesFilter(self, edges3d, reductor):
         # Calculate entropy
-        entropy = np.mean(np.mean(edges3d,0),0)
+        entropy = np.median(np.median(edges3d,0),0)
 
         # mean entropy filter
-        mef = entropy < np.mean(entropy)
+        mefa = np.median(entropy)
+        mefb = np.max(entropy)
+        mef = entropy < mefa + (mefb / reductor)
         meanEntropy = np.zeros(len(entropy))
         meanEntropy[mef] = True
 
@@ -211,7 +213,9 @@ class HS:
         entropyDynamics = np.absolute(entropyDynamics)
 
         # Mean dynamics filter
-        med = entropyDynamics < np.mean(entropyDynamics)
+        meda = np.median(entropyDynamics)
+        medb = np.max(entropyDynamics)
+        med = entropyDynamics < meda + (medb / reductor)
         meanDynamics = np.zeros(len(entropy))
         meanDynamics[med] = True
 
@@ -220,28 +224,35 @@ class HS:
 
         return (entropy, meanEntropy, entropyDynamics, meanDynamics, union)
 
-    def edgesFlat(self, edges3d):
-        edgesFlat = np.zeros((self.rows, self.cols))
-
-        edgesFlat = np.mean(edges3d, 2)
-        #for sid in xrange(self.bands):
-            #print sid
-        #    edgesFlat = np.add(edgesFlat, edges[:,:,sid])
-
-        a = np.min(edgesFlat)
-        b = np.max(edgesFlat)
-        edgesFlat = np.divide(np.subtract(edgesFlat, a), b - a)
+    def edgesFlatMax(self, edges3d, filter):
+        edgesFlat = np.max(np.squeeze(edges3d[:,:,np.where(filter)]), 2)
+        edgesFlat = scipy.ndimage.median_filter(edgesFlat, size=(2, 2))
 
         return edgesFlat
 
+    def edgesFlatMean(self, edges3d, filter):
+        edgesFlatMean = np.mean(np.squeeze(edges3d[:,:,np.where(filter)]), 2)
+        edgesFlatMean = scipy.ndimage.median_filter(edgesFlatMean, size=(2, 2))
+
+        return edgesFlatMean
+
+    def edgesFlat(self, edges3d, filter):
+        return self.edgesFlatMean(edges3d, filter)
+
+        efmax = self.edgesFlatMax(edges3d, filter)
+        efmean = self.edgesFlatMean(edges3d, filter)
+
+        edgesFlat = np.add(efmax,efmean)
+
+        return edgesFlat
+
+
     def edgesMask(self, edgesFlat):
         edgesMask = np.zeros(np.shape(edgesFlat))
-
-        threshold = np.mean(edgesFlat)
-        lvi = edgesFlat < threshold
-
+        lvi = edgesFlat < np.mean(edgesFlat)
         edgesMask[lvi] = False
         edgesMask[np.invert(lvi)] = True
+        edgesMask = ndimage.binary_dilation(edgesMask)
 
         return edgesMask
 

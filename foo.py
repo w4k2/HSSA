@@ -13,63 +13,50 @@ print 'Hello.'
 img = hssa.HS(dictionary)
 print img
 
-k = (2,2)
 
-# Kostka graniczna
-edges3d = img.edges3d(k)
-print '- edges3d shape = %s' % str(np.shape(edges3d))
-
-# Filtr
-edgesFilter = img.edgesFilter(edges3d)
-entropy = edgesFilter[0]
-meanEntropy = edgesFilter[1]
-entropyDynamics = edgesFilter[2]
-meanDynamics = edgesFilter[3]
-union = edgesFilter[4]
-
-# Spłaszczona kostka
-edgesFlat = img.edgesFlat(edges3d)
-print '- edgesFlat shape = %s' % str(np.shape(edgesFlat))
+k = (4, 4)
+reductor = 16.
 
 
-# Maska
-edgesMask = img.edgesMask(edgesFlat)
-print '- edgesMask shape = %s' % str(np.shape(edgesMask))
+ap = hssa.AP(img, k, reductor)
 
-plt.figure(figsize=(16,8))
+# foo.png
+plt.figure(figsize=(6, 12))
 
-plt.subplot(431)
-plt.imshow(edgesFlat, cmap='gray')
-plt.title('edgesFlat')
+noFilter = [True] * img.bands
+
+# Spłaszczona kostka wypadkowa
+plt.subplot(221); plt.imshow(ap.edgesFlat(noFilter), cmap='gray'); plt.axis('off')
+plt.subplot(223); plt.imshow(ap.edgesMask(noFilter), cmap='gray'); plt.axis('off')
+
+# Odfiltrowana spłaszczona kostka wypadkowa
+plt.subplot(222); plt.imshow(ap.edgesFlat(), cmap='gray'); plt.axis('off')
+plt.subplot(224); plt.imshow(ap.edgesMask(), cmap='gray'); plt.axis('off')
+
+plt.savefig('foo.png')
+
+
+# bar.png
+plt.figure(figsize=(6, 6))
+
+plt.subplot(311)
+plt.plot(xrange(img.bands), ap.entropy)
+plt.plot(xrange(img.bands), ap.meanEntropy)
 plt.axis('off')
+plt.title('Filtering')
 
-plt.subplot(432)
-plt.imshow(edgesMask, cmap='gray')
-plt.title('edgesMask')
+plt.subplot(312)
+plt.plot(xrange(img.bands), ap.entropyDynamics)
+plt.plot(xrange(img.bands), ap.meanDynamics)
 plt.axis('off')
-
-
-plt.subplot(412)
-plt.plot(xrange(img.bands), entropy)
-plt.plot(xrange(img.bands), meanEntropy)
-plt.title('entropy and meanEntropy')
-
-plt.subplot(413)
-plt.plot(xrange(img.bands), entropyDynamics)
-plt.plot(xrange(img.bands), meanDynamics)
 plt.title('entropyDynamics and meanDynamics')
 
-plt.subplot(414)
-plt.plot(xrange(img.bands), entropy)
-plt.plot(xrange(img.bands), union)
+plt.subplot(313)
+plt.plot(xrange(img.bands), ap.entropy)
+plt.plot(xrange(img.bands), ap.filter)
+plt.axis('off')
 plt.title('entropy and union')
 
-'''
-edgesMask = img.edgesMask(k)
 
-
-plt.imshow(edgesMask, cmap='gray')
 plt.axis('off')
-
-'''
-plt.savefig('foo.png')
+plt.savefig('bar.png')
