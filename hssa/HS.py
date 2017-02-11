@@ -155,6 +155,7 @@ class HS:
         layers = ksize[0] * ksize[1]
         tensor = np.zeros((self.rows, self.cols, layers))
         i = 0
+        # Moving Spermatozoid
         for x in xrange(ksize[0]):
             for y in xrange(ksize[1]):
                 kernel = np.zeros(ksize)
@@ -167,21 +168,82 @@ class HS:
         return tensor
 
 
-    def edges(self, ksize = (3, 3)):
+    def edges3d(self, ksize):
         edges3d = np.zeros(np.shape(self.image))
         for sid in xrange(self.bands):
+            # Gather slice
             slice = self.slice(sid)
 
+            # Establish tensor
             tensor = self.dynamicsTensor(slice, ksize)
 
+            # Calculate
             edges2d = np.subtract(
                 np.amax(tensor, axis=2),
                 np.amin(tensor, axis=2)
             )
 
+            # Normalize
+            a = np.min(edges2d)
+            b = np.max(edges2d)
+            edges2d = np.divide(np.subtract(edges2d, a), b - a)
+
+            # Assign
             edges3d[:,:,sid] = edges2d
 
         return edges3d
+
+    def edgesFilter(self, edges3d):
+        # Calculate entropy
+        entropy = np.mean(np.mean(edges3d,0),0)
+
+        # mean entropy filter
+        mef = entropy < np.mean(entropy)
+        meanEntropy = np.zeros(len(entropy))
+        meanEntropy[mef] = True
+
+        # Entropy dynamics
+        entropyDynamics = np.copy(entropy)
+        val = entropyDynamics[0]
+        entropyDynamics = np.delete(entropyDynamics, 0)
+        entropyDynamics = np.append(entropyDynamics, entropyDynamics[-1])
+        entropyDynamics = np.subtract(entropy, entropyDynamics)
+        entropyDynamics = np.absolute(entropyDynamics)
+
+        # Mean dynamics filter
+        med = entropyDynamics < np.mean(entropyDynamics)
+        meanDynamics = np.zeros(len(entropy))
+        meanDynamics[med] = True
+
+        # Union filter
+        union = [a and b for a,b in zip(meanEntropy, meanDynamics)]
+
+        return (entropy, meanEntropy, entropyDynamics, meanDynamics, union)
+
+    def edgesFlat(self, edges3d):
+        edgesFlat = np.zeros((self.rows, self.cols))
+
+        edgesFlat = np.mean(edges3d, 2)
+        #for sid in xrange(self.bands):
+            #print sid
+        #    edgesFlat = np.add(edgesFlat, edges[:,:,sid])
+
+        a = np.min(edgesFlat)
+        b = np.max(edgesFlat)
+        edgesFlat = np.divide(np.subtract(edgesFlat, a), b - a)
+
+        return edgesFlat
+
+    def edgesMask(self, edgesFlat):
+        edgesMask = np.zeros(np.shape(edgesFlat))
+
+        threshold = np.mean(edgesFlat)
+        lvi = edgesFlat < threshold
+
+        edgesMask[lvi] = False
+        edgesMask[np.invert(lvi)] = True
+
+        return edgesMask
 
     """
     ## Loading from .mat file
