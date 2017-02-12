@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?><testsuite name="nosetests" tests="10" errors="0" failures="0" skip="0"><testcase classname="test" name="test_loading" time="0.387"></testcase><testcase classname="test" name="test_signature" time="0.206"></testcase><testcase classname="test" name="test_slice" time="0.310"></testcase><testcase classname="test" name="test_hssa_init" time="0.257"></testcase><testcase classname="test" name="test_hssa_frame_signature" time="0.220"><system-out><![CDATA[F0|L0|S-1|L0|H0.891
-]]></system-out></testcase><testcase classname="test" name="test_hssa_homogeneity_measure" time="0.181"></testcase><testcase classname="test" name="test_is_dividing_working" time="0.421"></testcase><testcase classname="test" name="test_dumb_hssa" time="6.764"></testcase><testcase classname="test" name="test_limit_hssa" time="0.935"><system-out><![CDATA[TRY
+<?xml version="1.0" encoding="UTF-8"?><testsuite name="nosetests" tests="10" errors="0" failures="0" skip="0"><testcase classname="test" name="test_loading" time="0.190"></testcase><testcase classname="test" name="test_signature" time="0.188"></testcase><testcase classname="test" name="test_slice" time="0.188"></testcase><testcase classname="test" name="test_hssa_init" time="0.192"></testcase><testcase classname="test" name="test_hssa_frame_signature" time="0.186"><system-out><![CDATA[F0|L0|S-1|L0|H0.900
+]]></system-out></testcase><testcase classname="test" name="test_hssa_homogeneity_measure" time="0.191"></testcase><testcase classname="test" name="test_is_dividing_working" time="0.394"></testcase><testcase classname="test" name="test_dumb_hssa" time="5.344"></testcase><testcase classname="test" name="test_limit_hssa" time="0.877"><system-out><![CDATA[TRY
 Config tag: hssa_im_Salinas A_ht_0.980_jt_0.980_l_4_p_20
 Config tag: hssa_im_Salinas A_ht_0.980_jt_0.980_l_4_p_20
-]]></system-out></testcase><testcase classname="test" name="test_hssa_final" time="9.008"><system-out><![CDATA[Config tag: hssa_im_Salinas A_ht_0.995_jt_0.995_l_6_p_20
-302
+]]></system-out></testcase><testcase classname="test" name="test_hssa_final" time="8.618"><system-out><![CDATA[Config tag: hssa_im_Salinas A_ht_0.995_jt_0.995_l_6_p_20
+328
 ]]></system-out></testcase></testsuite>
