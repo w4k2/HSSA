@@ -10,27 +10,23 @@ class AP:
         self.edges3d = img.edges3d(ksize)
 
         # Filtr
-        edgesFilter = img.edgesFilter(self.edges3d, percentile)
+        epf = img.epf(self.edges3d, percentile)
 
-        self.entropy = edgesFilter[0]
-        self.meanEntropy = edgesFilter[1]
-        self.entropyDynamics = edgesFilter[2]
-        self.meanDynamics = edgesFilter[3]
+        self.entropy = epf[0]
+        self.meanEntropy = epf[1]
+        self.entropyDynamics = epf[2]
+        self.meanDynamics = epf[3]
 
-        self.filter = edgesFilter[4]
+        self.filter = epf[4]
 
-    def edgesFlat(self, filter = None):
+    def bordersMap(self, filter = None):
         if not filter:
             filter = self.filter
+        bordersMap = self.img.bordersMap(self.edges3d, filter)
+        return bordersMap
 
-        edgesFlat = self.img.edgesFlat(self.edges3d, filter)
-        return edgesFlat
-
-    def edgesMask(self, filter = None):
+    def bordersMask(self, filter = None, percentile = 75):
         if not filter:
             filter = self.filter
-
-        edgesFlat = self.edgesFlat(filter)
-        edgesMask = self.img.edgesMask(edgesFlat)
-
-        return edgesMask
+        bordersMask = self.img.bordersMask(self.bordersMap(filter), percentile)
+        return bordersMask

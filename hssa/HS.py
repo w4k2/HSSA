@@ -151,10 +151,14 @@ class HS:
 
     ## Helper functions
 
+    """
+    ## Entropodynamic Percentyle Filter
+    """
     def dynamicsTensor(self, slice, ksize):
         layers = ksize[0] * ksize[1]
         tensor = np.zeros((self.rows, self.cols, layers))
         i = 0
+
         # Moving Spermatozoid
         for x in xrange(ksize[0]):
             for y in xrange(ksize[1]):
@@ -167,7 +171,6 @@ class HS:
 
         return tensor
 
-
     def edges3d(self, ksize):
         edges3d = np.zeros(np.shape(self.image))
         for sid in xrange(self.bands):
@@ -177,7 +180,7 @@ class HS:
             # Establish tensor
             tensor = self.dynamicsTensor(slice, ksize)
 
-            # Calculate
+            # Calculate denivelation
             edges2d = np.subtract(
                 np.amax(tensor, axis=2),
                 np.amin(tensor, axis=2)
@@ -193,7 +196,7 @@ class HS:
 
         return edges3d
 
-    def edgesFilter(self, edges3d, percentile):
+    def epf(self, edges3d, percentile):
         # Calculate entropy
         entropy = np.percentile(
             np.percentile(
@@ -226,31 +229,21 @@ class HS:
 
         return (entropy, meanEntropy, entropyDynamics, meanDynamics, union)
 
-    def edgesFlatMax(self, edges3d, filter):
-        edgesFlat = np.max(np.squeeze(edges3d[:,:,np.where(filter)]), 2)
-        edgesFlat = scipy.ndimage.median_filter(edgesFlat, size=(2, 2))
+    def bordersMap(self, edges3d, filter):
+        filteredEdges = np.squeeze(edges3d[:,:,np.where(filter)])
+        bordersMap = np.max(filteredEdges, 2)
+        bordersMap = scipy.ndimage.median_filter(
+            bordersMap,
+            size=(2, 2)
+        )
+        return bordersMap
 
-        return edgesFlat
-
-    def edgesFlatMean(self, edges3d, filter):
-        edgesFlatMean = np.mean(np.squeeze(edges3d[:,:,np.where(filter)]), 2)
-        edgesFlatMean = scipy.ndimage.median_filter(edgesFlatMean, size=(2, 2))
-
-        edgesFlatMean = ndimage.grey_dilation(edgesFlatMean, size=(3,3))
-
-        return edgesFlatMean
-
-    def edgesFlat(self, edges3d, filter):
-        return self.edgesFlatMax(edges3d, filter)
-
-    def edgesMask(self, edgesFlat):
+    def bordersMask(self, edgesFlat, percentile = 75):
         edgesMask = np.zeros(np.shape(edgesFlat))
-        lvi = edgesFlat < np.mean(edgesFlat)
-        edgesMask[lvi] = False
-        edgesMask[np.invert(lvi)] = True
+        lvi = edgesFlat > np.percentile(edgesFlat, percentile)
+        edgesMask[lvi] = True
         edgesMask = ndimage.binary_dilation(edgesMask)
-
-        return edgesMask
+        return edgesMask.astype(bool)
 
     """
     ## Loading from .mat file
@@ -287,7 +280,6 @@ class HS:
         )
         print '# Classes\n%s' % self.reverseClasses
         return dataset
-
 
     """
     ## Be verbose, man
