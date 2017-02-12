@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 
 class AP:
-    def __init__(self, img, ksize, reductor):
+    def __init__(self, img, ksize, percentile):
         self.img = img
         self.ksize = ksize
-        self.reductor = reductor
+        self.percentile = percentile
 
         # Kostka graniczna
         self.edges3d = img.edges3d(ksize)
 
         # Filtr
-        edgesFilter = img.edgesFilter(self.edges3d, reductor)
+        edgesFilter = img.edgesFilter(self.edges3d, percentile)
 
         self.entropy = edgesFilter[0]
         self.meanEntropy = edgesFilter[1]

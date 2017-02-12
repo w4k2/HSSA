@@ -193,14 +193,18 @@ class HS:
 
         return edges3d
 
-    def edgesFilter(self, edges3d, reductor):
+    def edgesFilter(self, edges3d, percentile):
         # Calculate entropy
-        entropy = np.median(np.median(edges3d,0),0)
+        entropy = np.percentile(
+            np.percentile(
+                edges3d, percentile, axis = 0),
+            percentile, axis = 0)
+        entropy = np.absolute(
+            np.subtract(
+                entropy, np.median(entropy)))
 
         # mean entropy filter
-        mefa = np.median(entropy)
-        mefb = np.max(entropy)
-        mef = entropy < mefa + (mefb / reductor)
+        mef = entropy < np.percentile(entropy, percentile)
         meanEntropy = np.zeros(len(entropy))
         meanEntropy[mef] = True
 
@@ -213,9 +217,7 @@ class HS:
         entropyDynamics = np.absolute(entropyDynamics)
 
         # Mean dynamics filter
-        meda = np.median(entropyDynamics)
-        medb = np.max(entropyDynamics)
-        med = entropyDynamics < meda + (medb / reductor)
+        med = entropyDynamics < np.percentile(entropyDynamics, percentile)
         meanDynamics = np.zeros(len(entropy))
         meanDynamics[med] = True
 
@@ -234,18 +236,12 @@ class HS:
         edgesFlatMean = np.mean(np.squeeze(edges3d[:,:,np.where(filter)]), 2)
         edgesFlatMean = scipy.ndimage.median_filter(edgesFlatMean, size=(2, 2))
 
+        edgesFlatMean = ndimage.grey_dilation(edgesFlatMean, size=(3,3))
+
         return edgesFlatMean
 
     def edgesFlat(self, edges3d, filter):
-        return self.edgesFlatMean(edges3d, filter)
-
-        efmax = self.edgesFlatMax(edges3d, filter)
-        efmean = self.edgesFlatMean(edges3d, filter)
-
-        edgesFlat = np.add(efmax,efmean)
-
-        return edgesFlat
-
+        return self.edgesFlatMax(edges3d, filter)
 
     def edgesMask(self, edgesFlat):
         edgesMask = np.zeros(np.shape(edgesFlat))
