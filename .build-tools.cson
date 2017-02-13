@@ -10,6 +10,10 @@ providers: [
         env: {}
         modifier:
           save_all: {}
+          shell:
+            command: "bash -c"
+          env:
+            TERM: "screen"
         environment:
           name: "child_process"
           config:
