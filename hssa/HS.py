@@ -154,22 +154,16 @@ class HS:
     """
     ## Entropodynamic Percentyle Filter
     """
-    def dynamicsTensor(self, slice, ksize):
-        layers = ksize[0] * ksize[1]
-        tensor = np.zeros((self.rows, self.cols, layers))
-        i = 0
+    def edges3(self, ksize):
+        edges3 = np.zeros(np.shape(self.image))
+        for sid in xrange(self.bands):
+            # Gather slice
+            slice = self.slice(sid)
 
-        # Moving Spermatozoid
-        for x in xrange(ksize[0]):
-            for y in xrange(ksize[1]):
-                kernel = np.zeros(ksize)
-                kernel[x,y] = 1.
+            # Assign
+            edges3[:,:,sid] = self.edges2(slice, ksize)
 
-                smoothed = ndimage.convolve(slice, kernel, mode='reflect', cval=0.0)
-                tensor[:,:,i] = smoothed
-                i += 1
-
-        return tensor
+        return edges3
 
     def edges2(self, map, ksize):
         # Establish tensor
@@ -187,23 +181,33 @@ class HS:
         edges2 = np.divide(np.subtract(edges2, a), b - a)
 
         return edges2
+        
+    def dynamicsTensor(self, slice, ksize):
+        layers = ksize[0] * ksize[1]
+        tensor = np.zeros((self.rows, self.cols, layers))
+        i = 0
 
-    def edges3(self, ksize):
-        edges3 = np.zeros(np.shape(self.image))
-        for sid in xrange(self.bands):
-            # Gather slice
-            slice = self.slice(sid)
+        # Moving Spermatozoid
+        for x in xrange(ksize[0]):
+            for y in xrange(ksize[1]):
+                kernel = np.zeros(ksize)
+                kernel[x,y] = 1.
 
-            # Assign
-            edges3[:,:,sid] = self.edges2(slice, ksize)
+                smoothed = ndimage.convolve(slice, kernel, mode='reflect', cval=0.0)
+                tensor[:,:,i] = smoothed
+                i += 1
 
-        return edges3
+        return tensor
 
-    def epf(self, edges3d, percentile):
+
+
+
+
+    def epf(self, edges3, percentile):
         # Calculate entropy
         entropy = np.percentile(
             np.percentile(
-                edges3d, percentile, axis = 0),
+                edges3, percentile, axis = 0),
             percentile, axis = 0)
         entropy = np.absolute(
             np.subtract(
