@@ -95,9 +95,10 @@ class HSFrame:
         signatures = []
         for item in xrange(0, amount if amount < stop else stop):
             index = random.randrange(stop)
-            x = int(index / width)
-            y = int(index % width)
-            signature = self.hs.signature((left + x, top + y))
+            signature = self.hs.signature((
+                left + int(index / width),
+                top + int(index % width))
+            )
             signatures.append(signature)
         return signatures
 

@@ -181,7 +181,7 @@ class HS:
         edges2 = np.divide(np.subtract(edges2, a), b - a)
 
         return edges2
-        
+
     def dynamicsTensor(self, slice, ksize):
         layers = ksize[0] * ksize[1]
         tensor = np.zeros((self.rows, self.cols, layers))
@@ -198,10 +198,6 @@ class HS:
                 i += 1
 
         return tensor
-
-
-
-
 
     def epf(self, edges3, percentile):
         # Calculate entropy
