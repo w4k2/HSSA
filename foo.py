@@ -14,7 +14,7 @@ materialized = LinearSegmentedColormap.from_list(
     'materialized', ['#fafafa', '#f44336', '#e91e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4', '#009688', '#4caf50', '#8bc34a', '#cddc39', '#ffeb3b', '#ffc107', '#ff9800', '#ff5722', '#000000'])
 
 imagesDirectory = 'data/hsimages/'
-with open('%s%s' % (imagesDirectory, 'salinas.json')) as data_file:
+with open('%s%s' % (imagesDirectory, 'salinasA.json')) as data_file:
     dictionary = json.load(data_file)
 print 'Hello.'
 
@@ -22,6 +22,7 @@ img = hssa.HS(dictionary)
 print img
 
 k = (2, 2)
+
 percentile = 50
 ap = hssa.AP(img, k, percentile)
 
@@ -37,22 +38,32 @@ b = ap.bordersMask(noFilter)
 c = ap.bordersMap()
 d = ap.bordersMask()
 
+# Odfiltrowana spłaszczona kostka wypadkowa
+e = ap.weird()
+f = ap.img.bordersMask(e)
+
 #
 gt = np.copy(img.gt)
 gt[0,0] = 17
 gta = np.copy(img.gt)
 gta[d] = 17
+gta[f] = 17
 
 # foo.png
 plt.figure(figsize=(6, 6))
 
-plt.subplot(231); plt.imshow(a, cmap='gray'); plt.axis('off')
-plt.subplot(234); plt.imshow(b == False, cmap='gray'); plt.axis('off')
-plt.subplot(232); plt.imshow(c, cmap='gray'); plt.axis('off')
-plt.subplot(235); plt.imshow(d == False, cmap='gray'); plt.axis('off')
-plt.subplot(233); plt.imshow(gt, cmap=materialized); plt.axis('off')
-plt.subplot(236); plt.imshow(gta, cmap=materialized); plt.axis('off')
-#plt.tight_layout(pad=-0.0, w_pad=-2.0, h_pad=-4.0)
+plt.subplot(241); plt.imshow(a, cmap='gray'); plt.axis('off')
+plt.subplot(245); plt.imshow(b == False, cmap='gray'); plt.axis('off')
+
+plt.subplot(242); plt.imshow(c, cmap='gray'); plt.axis('off')
+plt.subplot(246); plt.imshow(d == False, cmap='gray'); plt.axis('off')
+
+plt.subplot(243); plt.imshow(e, cmap='gray'); plt.axis('off')
+plt.subplot(247); plt.imshow(f == False, cmap='gray'); plt.axis('off')
+
+plt.subplot(244); plt.imshow(gt, cmap=materialized); plt.axis('off')
+plt.subplot(248); plt.imshow(gta, cmap=materialized); plt.axis('off')
+
 plt.tight_layout(pad=0.4, w_pad=0.5, h_pad=1.0)
 plt.savefig('foo.png')
 
@@ -66,7 +77,7 @@ plt.savefig('foo.png')
 
 
 
-
+'''
 
 # bar.png
 plt.figure(figsize=(8, 6))
@@ -166,3 +177,4 @@ ax3.get_yaxis().set_tick_params(direction='in')
 
 plt.tight_layout(pad=1)
 plt.savefig('bar.png')
+'''

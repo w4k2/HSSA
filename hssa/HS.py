@@ -171,30 +171,33 @@ class HS:
 
         return tensor
 
-    def edges3d(self, ksize):
-        edges3d = np.zeros(np.shape(self.image))
+    def edges2(self, map, ksize):
+        # Establish tensor
+        tensor = self.dynamicsTensor(map, ksize)
+
+        # Calculate denivelation
+        edges2 = np.subtract(
+            np.amax(tensor, axis=2),
+            np.amin(tensor, axis=2)
+        )
+
+        # Normalize
+        a = np.min(edges2)
+        b = np.max(edges2)
+        edges2 = np.divide(np.subtract(edges2, a), b - a)
+
+        return edges2
+
+    def edges3(self, ksize):
+        edges3 = np.zeros(np.shape(self.image))
         for sid in xrange(self.bands):
             # Gather slice
             slice = self.slice(sid)
 
-            # Establish tensor
-            tensor = self.dynamicsTensor(slice, ksize)
-
-            # Calculate denivelation
-            edges2d = np.subtract(
-                np.amax(tensor, axis=2),
-                np.amin(tensor, axis=2)
-            )
-
-            # Normalize
-            a = np.min(edges2d)
-            b = np.max(edges2d)
-            edges2d = np.divide(np.subtract(edges2d, a), b - a)
-
             # Assign
-            edges3d[:,:,sid] = edges2d
+            edges3[:,:,sid] = self.edges2(slice, ksize)
 
-        return edges3d
+        return edges3
 
     def epf(self, edges3d, percentile):
         # Calculate entropy
@@ -229,8 +232,9 @@ class HS:
 
         return (entropy, meanEntropy, entropyDynamics, meanDynamics, union)
 
-    def bordersMap(self, edges3d, filter):
-        filteredEdges = np.squeeze(edges3d[:,:,np.where(filter)])
+    def bordersMap(self, source, filter):
+        filteredEdges = np.squeeze(source[:,:,np.where(filter)])
+
         bordersMap = np.max(filteredEdges, 2)
         bordersMap = scipy.ndimage.median_filter(
             bordersMap,

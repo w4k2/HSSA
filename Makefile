@@ -19,4 +19,7 @@ docs:
 	cp -r figures docs/
 	pycco hssa/*.py
 
+foo:
+	./foo.py
+
 .PHONY: publish test docs
