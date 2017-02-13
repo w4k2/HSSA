@@ -15,4 +15,4 @@ notifications:
     on_success: never
 addons:
   code_climate:
-    repo_to£ken: b8cddfd6826ab860bc8effcf1e5e75f7ce3fde32c40fac523e45c93d0d9699e5
+    repo_token: b8cddfd6826ab860bc8effcf1e5e75f7ce3fde32c40fac523e45c93d0d9699e5
