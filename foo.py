@@ -16,53 +16,47 @@ materialized = LinearSegmentedColormap.from_list(
 imagesDirectory = 'data/hsimages/'
 with open('%s%s' % (imagesDirectory, 'salinasA.json')) as data_file:
     dictionary = json.load(data_file)
-print 'Hello.'
-
-img = hssa.HS(dictionary)
-print img
 
 k = (2, 2)
-
 percentile = 50
-ap = hssa.AP(img, k, percentile)
 
-noFilter = [True] * img.bands
+hs = hssa.HS(dictionary)
+print hs
 
-print 'Filter windows = %i' % np.sum(ap.filter)
+epf = hssa.EPF(hs, k, percentile)
+print epf
 
-# Spłaszczona kostka wypadkowa
-a = ap.bordersMap(noFilter)
-b = ap.bordersMask(noFilter)
+noFilter = [True] * hs.bands
 
-# Odfiltrowana spłaszczona kostka wypadkowa
-c = ap.bordersMap()
-d = ap.bordersMask()
-
-# Odfiltrowana spłaszczona kostka wypadkowa
-e = ap.weird()
-f = ap.img.bordersMask(e)
+print 'Filter windows = %i' % np.sum(epf.filter)
 
 #
-gt = np.copy(img.gt)
+gt = np.copy(hs.gt)
 gt[0,0] = 17
-gta = np.copy(img.gt)
-gta[d] = 17
-gta[f] = 17
+
+# Spłaszczona kostka wypadkowa
+a = epf.bordersMap(filter = noFilter)
+b = epf.bordersMask(filter = noFilter)
+gtb = np.copy(gt)
+gtb[b] = 17
+
+# Odfiltrowana spłaszczona kostka wypadkowa
+c = epf.bordersMap()
+d = epf.bordersMask()
+gtd = np.copy(gt)
+gtd[d] = 17
+
 
 # foo.png
 plt.figure(figsize=(6, 6))
+gs1 = gridspec.GridSpec(2, 2)
+gs1.update(wspace=0, hspace=0) # set the spacing between axes.
 
-plt.subplot(241); plt.imshow(a, cmap='gray'); plt.axis('off')
-plt.subplot(245); plt.imshow(b == False, cmap='gray'); plt.axis('off')
+plt.subplot(gs1[0]); plt.imshow(a, cmap='gray'); plt.axis('off')
+plt.subplot(gs1[1]); plt.imshow(gtb, cmap=materialized); plt.axis('off')
 
-plt.subplot(242); plt.imshow(c, cmap='gray'); plt.axis('off')
-plt.subplot(246); plt.imshow(d == False, cmap='gray'); plt.axis('off')
-
-plt.subplot(243); plt.imshow(e, cmap='gray'); plt.axis('off')
-plt.subplot(247); plt.imshow(f == False, cmap='gray'); plt.axis('off')
-
-plt.subplot(244); plt.imshow(gt, cmap=materialized); plt.axis('off')
-plt.subplot(248); plt.imshow(gta, cmap=materialized); plt.axis('off')
+plt.subplot(gs1[2]); plt.imshow(c, cmap='gray'); plt.axis('off')
+plt.subplot(gs1[3]); plt.imshow(gtd, cmap=materialized); plt.axis('off')
 
 plt.tight_layout(pad=0.4, w_pad=0.5, h_pad=1.0)
 plt.savefig('foo.png')
@@ -77,7 +71,6 @@ plt.savefig('foo.png')
 
 
 
-'''
 
 # bar.png
 plt.figure(figsize=(8, 6))
@@ -86,72 +79,77 @@ gs1.update(wspace=0, hspace=0) # set the spacing between axes.
 
 # First
 ax1 = plt.subplot(gs1[0])
-entropy = ap.entropy
-wherePass = np.squeeze(np.where(ap.meanEntropy))
-whereFail = np.squeeze(np.where(np.logical_not(ap.meanEntropy)))
+entropy = epf.entropy
+wherePass = np.squeeze(np.where(epf.meanEntropy))
+whereEntropyFail = np.squeeze(np.where(np.logical_not(epf.meanEntropy)))
 
 entropyPass = np.copy(entropy)
-entropyPass[whereFail] = np.nan
+entropyPass[whereEntropyFail] = np.nan
 
-plt.plot(xrange(img.bands), entropy,
-    color = '#BABAFE', linestyle = 'dashed', lw = 1)
-plt.plot(xrange(img.bands), entropyPass,
-    color = '#2222CC', lw = 1)
+plt.plot(xrange(hs.bands), entropy,
+    color = '#FEBABA', linestyle = 'dashed', lw = 1)
+plt.plot(xrange(hs.bands), entropyPass,
+    color = '#CC2222', lw = 1)
 #plt.title('entropy with filter')
 
-for item in whereFail:
+for item in whereEntropyFail:
     ax1.add_patch(
         patches.Rectangle(
             (item-.5, -10),   # (x,y)
             1,          # width
             20,          # height
-            color = '#F5F5FE'
+            color = '#FEE5E5'
         )
     )
 
 # Second
-ax2 = plt.subplot(gs1[2])
-entropyDynamics = ap.entropyDynamics
-whereFail = np.squeeze(np.where(np.logical_not(ap.meanDynamics)))
-wherePass = np.squeeze(np.where(ap.meanDynamics))
+ax2 = plt.subplot(gs1[1])
+entropyDynamics = epf.entropyDynamics
+whereDynamicsFail = np.squeeze(np.where(np.logical_not(epf.meanDynamics)))
+wherePass = np.squeeze(np.where(epf.meanDynamics))
 
 entropyDynamicsPass = np.copy(entropyDynamics)
-entropyDynamicsPass[whereFail] = np.nan
+entropyDynamicsPass[whereDynamicsFail] = np.nan
 
-plt.plot(xrange(img.bands), entropyDynamics,
-    color = '#FEBABA', linestyle = 'dashed', lw = 1)
-plt.plot(xrange(img.bands), entropyDynamicsPass,
-    color = '#CC2222', lw = 1)
+plt.plot(xrange(hs.bands), entropyDynamics,
+    color = '#BABAFE', linestyle = 'dashed', lw = 1)
+plt.plot(xrange(hs.bands), entropyDynamicsPass,
+    color = '#2222CC', lw = 1)
 #plt.title('entropy dynamics with filter')
-for item in whereFail:
+for item in whereDynamicsFail:
     ax2.add_patch(
         patches.Rectangle(
             (item-.5, -10),   # (x,y)
             1,          # width
             20,          # height
-            color = '#FEF5F5'
+            color = '#E5E5FE'
+        )
+    )
+for item in whereEntropyFail:
+    ax2.add_patch(
+        patches.Rectangle(
+            (item-.5, -10),   # (x,y)
+            1,          # width
+            20,          # height
+            color = '#FEE5E5'
         )
     )
 
+
 # Forth
-ax3 = plt.subplot(gs1[1])
-whereFail = np.squeeze(np.where(np.logical_not(ap.filter)))
-wherePass = np.squeeze(np.where(ap.filter))
-signatures = img.signatures()
+ax3 = plt.subplot(gs1[2])
+whereFail = np.squeeze(np.where(np.logical_not(epf.filter)))
+wherePass = np.squeeze(np.where(epf.filter))
+signatures = hs.signatures()
 for item in signatures:
     signature = signatures[item]
     signaturePass = np.copy(signature)
     signaturePass[whereFail] = np.nan
     plt.plot(
-        xrange(img.bands), signature,
+        xrange(hs.bands), signature,
         color = '#BABABA', linestyle = 'dashed', lw = 1)
-    plt.plot(xrange(img.bands), signaturePass,
+    plt.plot(xrange(hs.bands), signaturePass,
         lw = 1)
-#plt.title('mean signatures with union filter (%i / %i bands (%.2f%%))' % (
-#    np.sum(ap.filter),
-#    img.bands,
-#    100 * np.sum(ap.filter) / float(img.bands)
-#))
 
 for item in whereFail:
     ax3.add_patch(
@@ -162,7 +160,6 @@ for item in whereFail:
             color = '#F5F5F5'
         )
     )
-
 
 ax1.set_yticklabels([])
 ax2.set_yticklabels([])
@@ -177,4 +174,3 @@ ax3.get_yaxis().set_tick_params(direction='in')
 
 plt.tight_layout(pad=1)
 plt.savefig('bar.png')
-'''

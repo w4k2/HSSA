@@ -6,15 +6,10 @@ import numpy as np
 import json
 
 imagesDirectory = 'data/hsimages/'
-
-
-def blue():
-    return "\033[92m"
-
+blue = "\033[92m"
 
 def endcolor():
     return '\033[0m'
-
 
 def loadImage():
     with open('%s%s' % (imagesDirectory, 'salinasA.json')) as data_file:
