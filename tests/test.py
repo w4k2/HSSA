@@ -17,7 +17,7 @@ def loadImage():
 
     return hssa.HS(dictionary)
 
-
+'''
 def test_loading():
     """Is image loading?"""
     hs = loadImage()
@@ -88,7 +88,7 @@ def test_is_dividing_working():
             thirdStageLocations.append(nFrame.location)
     assert sorted(thirdStageLocations) == list(xrange(0, 64))
 
-
+'''
 def test_dumb_hssa():
     """Is HSSA working?"""
     hs = loadImage()
@@ -101,7 +101,7 @@ def test_dumb_hssa():
 
     assert len(sgm.homogenous) > 0 and len(sgm.heterogenous) == 0
 
-
+'''
 def test_limit_hssa():
     """Is HSSA working with limits?"""
     hs = loadImage()
@@ -133,7 +133,7 @@ def test_hssa_final():
     #wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
     #for row in representation:
     #    wr.writerow(row)
-'''
+
 def test_weles_pass():
     """Passing image as dataset to Weles!"""
     img = loadImage()

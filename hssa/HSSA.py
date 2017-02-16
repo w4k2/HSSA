@@ -9,6 +9,7 @@ import operator
 
 from HS import *
 from HSFrame import *
+from EPF import *
 
 """
 **HSSA** is a two-staged segmentation tool for hs images. It is based on consecutive division of image to decompose it into a set of homogenous segments. Later, according to labels assigned by an expert, the representation is prepared as an input for classification methods.
@@ -18,7 +19,7 @@ class HSSA:
     """
     ## Initialization
     """
-    def __init__(self, hs, threshold, jThreshold, limit=99, points=20, stopAutomerge=False):
+    def __init__(self, hs, threshold, jThreshold, limit=99, points=20, stopAutomerge=False, toFilter=True):
         """
         Assign:
 
@@ -51,6 +52,18 @@ class HSSA:
         self.heterogenous = []
         self.homogenous = []
         self.clean()
+
+        """
+        Calculate EPF
+        """
+        self.filter = None
+        if toFilter:
+            epf = EPF(self.hs, (2, 2), 50)
+            self.filter = np.squeeze(np.where(epf.filter))
+            self.hs.setFilter(self.filter)
+            #print self.filter
+            #print np.shape(self.filter)
+
 
     """
     ## Single iteration

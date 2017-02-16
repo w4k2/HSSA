@@ -20,7 +20,7 @@ class HS:
         self.name = dictionary['name']
         self.classes = dictionary['classes']
 
-        #print type(self.image[(0,0)][0])
+        self.filter = None
 
         # Getting in shape.
         shape = np.shape(self.image)
@@ -33,17 +33,14 @@ class HS:
         self.normB = []
         for sliceIdx in xrange(self.bands):
             slice = self.slice(sliceIdx)
-            #print sliceIdx
             minimum = np.min(slice)
             maximum = np.max(slice)
             self.normA.append(minimum)
             self.normB.append(maximum)
-            #print slice
-            #print 'min %i max %i' % (minimum, maximum)
-        self.normB = map(operator.sub, self.normB, self.normA)
-        #print self.normA
-        #print self.normB
 
+        self.normB = map(operator.sub, self.normB, self.normA)
+        self.normA = np.asarray(self.normB)
+        self.normB = np.asarray(self.normB)
 
         # Searching for maximum value
         self.max = np.amax(self.image)
@@ -54,14 +51,21 @@ class HS:
 
     ## Operators
 
+    def setFilter(self, filter):
+        self.filter = filter
+        #print 'SET FILTER'
+        #print self.filter
+
     def signatures(self):
         labels = set()
         result = {}
+
         # Establish list of labels, according to GT
         for row in self.gt:
             for item in row:
                 if item not in labels:
                     labels.add(item)
+
         # Calculate mean signature for every label
         for label in labels:
             signatures = []
@@ -70,16 +74,11 @@ class HS:
                     if item == label:
                         signatures.append(self.signature((x, y)))
             result[label] = np.mean(signatures, axis = 0)
-        # return the result
+
         return result
 
     def signaturesPNG(self, filename):
         signatures = self.signatures()
-
-        # use LaTeX
-        #plt.rc('text', usetex=True)
-        #plt.rc('font', family='serif')
-        #rcParams['font.sans-serif'] = ['Tahoma']
 
         # Plot size
         plt.figure(figsize=(11, 5.5))
@@ -135,7 +134,20 @@ class HS:
     ### Getting signature
     """
     def signature(self, location):
-        return (self.image[location].astype(float) - self.normA) / self.normB
+        if self.filter is None:
+            return (self.image[location].astype(float) - self.normA) / self.normB
+        else:
+            signature = (self.image[location].astype(float) - self.normA) / self.normB
+            return signature[self.filter]
+
+    def cube(self):
+        image = (self.image.astype(float) -
+                 self.normA[np.newaxis, np.newaxis, :]
+             ) / self.normB[np.newaxis, np.newaxis, :]
+        if self.filter is None:
+            return np.copy(image)
+        else:
+            return np.copy(image[:,:,self.filter])
 
     """
     ### Getting label
@@ -184,7 +196,7 @@ class HS:
             source_samples,
             self.reverseClasses
         )
-        print '# Classes\n%s' % self.reverseClasses
+
         return dataset
 
     """

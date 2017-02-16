@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 import scipy as sp
-#from scipy import ndimage
 
 """
 ## Entropodynamic Percentyle Filter
@@ -43,17 +42,17 @@ class EPF:
 
         return edges3
 
-    def edges2(self, map, ksize):
+    def edges2(self, map, ksize, margins = 20):
         # Establish tensor
         tensor = self.dynamicsTensor(map, ksize)
 
         # Calculate denivelation
         edges2 = np.subtract(
-            np.amax(tensor, axis=2),
-            np.amin(tensor, axis=2)
+            np.percentile(tensor, 100 - margins, axis=2),
+            np.percentile(tensor, margins, axis=2)
         )
 
-        # Normalize
+        # Normalization
         a = np.min(edges2)
         b = np.max(edges2)
         edges2 = np.divide(np.subtract(edges2, a), b - a)
@@ -71,7 +70,12 @@ class EPF:
                 kernel = np.zeros(ksize)
                 kernel[x,y] = 1.
 
-                smoothed = sp.ndimage.convolve(slice, kernel, mode='reflect', cval=0.0)
+                smoothed = sp.ndimage.convolve(
+                    slice,
+                    kernel,
+                    mode='reflect',
+                    cval=0.0
+                )
                 tensor[:,:,i] = smoothed
                 i += 1
 
@@ -79,10 +83,14 @@ class EPF:
 
     def epf(self, edges3, percentile):
         # Calculate entropy
-        entropy = np.percentile(
+        pert = np.percentile(
             np.percentile(
                 edges3, percentile, axis = 0),
             percentile, axis = 0)
+
+        bert = np.median(np.median(edges3, axis = 0))
+
+        entropy = np.absolute(np.subtract(pert, bert))
         entropy = np.absolute(
             np.subtract(
                 entropy, np.median(entropy)))
@@ -123,16 +131,20 @@ class EPF:
             bordersMap,
             size=(2, 2)
         )
+        bordersMap = sp.ndimage.grey_dilation(bordersMap, size=(3,3))
         return bordersMap
 
-    def bordersMask(self, source = None, filter = None, percentile = 75):
+    def bordersMask(self, source = None, filter = None, percentile = None):
         if not filter:
             filter = self.filter
         if not source:
             source = self.bordersMap(filter = filter)
+        if not percentile:
+            percentile = self.percentile
 
         edgesMask = np.zeros(np.shape(source))
         lvi = source > np.percentile(source, percentile)
         edgesMask[lvi] = True
-        edgesMask = sp.ndimage.binary_dilation(edgesMask)
+        struct2 = sp.ndimage.generate_binary_structure(2, 1)
+        edgesMask = sp.ndimage.binary_dilation(edgesMask, structure = struct2)
         return edgesMask.astype(bool)
