@@ -9,15 +9,12 @@ import matplotlib.patches as patches
 import matplotlib.gridspec as gridspec
 
 imagesDirectory = 'data/hsimages/'
-with open('%s%s' % (imagesDirectory, 'paviaC.json')) as data_file:
+with open('%s%s' % (imagesDirectory, 'salinasA.json')) as data_file:
     dictionary = json.load(data_file)
 
-k = (3, 3)
-percentile = 50
 
-hs = hssa.HS(dictionary)
-ap = hssa.AP(hs, k, percentile, 0, bins = 256, quantization = 4)
-print ap.epf
+ap = hssa.AP(hssa.HS(dictionary))
+print ap
 
 mask = ap.epf.bordersMask()
 
@@ -28,7 +25,7 @@ for idx in xrange(np.shape(ap.channels)[2]):
     a = divmod(idx,3)[0]
     b = divmod(idx,3)[1]
     plt.subplot(9,5,13 + 5 * a + b)
-    channel = ap.channels[:,:,idx]
+    channel = np.copy(ap.channels[:,:,idx])
     channel[0,0] = 0
     channel[-1,-1] = 1
     plt.imshow(channel, cmap='gray'); plt.axis('off');
@@ -101,7 +98,7 @@ plt.imshow(mask, cmap='gray'); plt.axis('off');
 
 
 plt.tight_layout(pad=0, w_pad=0, h_pad=0)
-plt.savefig('foo.png')
+plt.savefig('handy/foo.png')
 
 
 
@@ -155,22 +152,21 @@ for i in xrange(cols):
 
 
 plt.tight_layout(pad=0, w_pad=0, h_pad=0)
-plt.savefig('bar.png')
-
+plt.savefig('handy/bar.png')
 
 plt.figure(figsize=(10, 10))
 
 plt.subplot(223)
-plt.imshow(ap.visualization())
+plt.imshow(ap.visualise())
 plt.axis('off'); plt.title('10%% from bell.')
-plt.imsave('%s.png' % ap.hs.name, ap.visualization())
+plt.imsave('handy/%s.png' % ap.hs.name, ap.visualisation)
 
 plt.subplot(221)
-plt.imshow(ap.visualization(1))
+plt.imshow(ap.visualise(1))
 plt.axis('off'); plt.title('Only leader')
 
 plt.subplot(222)
-plt.imshow(ap.visualization(500))
+plt.imshow(ap.visualise(500))
 plt.axis('off'); plt.title('All')
 
 plt.subplot(224)
@@ -192,4 +188,4 @@ plt.title('Rank distribution')
 '''
 
 #plt.tight_layout(pad=0, w_pad=0, h_pad=0)
-plt.savefig('rank.png')
+plt.savefig('handy/rank.png')

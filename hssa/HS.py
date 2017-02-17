@@ -54,8 +54,6 @@ class HS:
 
     def setFilter(self, filter):
         self.filter = filter
-        #print 'SET FILTER'
-        #print self.filter
 
     def signatures(self):
         labels = set()
@@ -148,6 +146,7 @@ class HS:
         if self.filter is None:
             return np.copy(image)
         else:
+            print type(self.filter)
             return np.copy(image[:,:,self.filter])
 
     """
@@ -205,7 +204,7 @@ class HS:
     ## Be verbose, man
     """
     def __str__(self):
-        return '%s image, %i classes, %i samples of %i bands' % (
+        return '%s image, %i classes, %i samples of %i bands.' % (
             self.name,
             len(self.classes),
             self.rows * self.cols,

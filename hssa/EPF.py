@@ -24,9 +24,11 @@ class EPF:
 
         self.filter = epf[4]
 
+        self.hs.setFilter(self.filter)
+
     def __str__(self):
-        return "EPF on %s image, k = %s, p = %i (%i / %i)" % (
-            self.hs.name,
+        return "%s EPF on kernel %s and %i percentile. %i / %i bands filtered." % (
+            self.hs,
             self.ksize,
             self.percentile,
             sum(self.filter),
@@ -116,12 +118,12 @@ class EPF:
         meanDynamics[med] = True
 
         # Union filter
-        union = [a and b for a,b in zip(meanEntropy, meanDynamics)]
+        union = np.squeeze(np.where([a and b for a,b in zip(meanEntropy, meanDynamics)]))
 
         return (entropy, meanEntropy, entropyDynamics, meanDynamics, union)
 
     def bordersMap(self, source = None, filter = None):
-        if not filter:
+        if filter is None:
             filter = self.filter
         if not source:
             source = self.edges3
