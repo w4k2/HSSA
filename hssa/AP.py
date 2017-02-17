@@ -54,7 +54,18 @@ class AP:
         channelNames.extend(['red', 'green', 'blue'])
 
         # Later, HSV conversion
-        hsv = plt.colors.rgb_to_hsv(np.multiply(rgb, -255))
+        hsv = (np.copy(rgb) - np.amin(rgb)) / (np.amax(rgb) - np.amin(rgb))
+        #hsv = np.multiply(hsv, 255)
+        #hsv = hsv.astype(int)
+        print np.amin(hsv)
+        print np.amax(hsv)
+        hsv = plt.colors.rgb_to_hsv(hsv)
+        print np.amin(hsv[:,:,0])
+        print np.amax(hsv[:,:,0])
+        print np.amin(hsv[:,:,1])
+        print np.amax(hsv[:,:,1])
+        print np.amin(hsv[:,:,2])
+        print np.amax(hsv[:,:,2])
         channelNames.extend(['hue', 'saturation', 'brightness'])
 
         #quartiles

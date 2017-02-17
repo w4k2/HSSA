@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 import scipy as sp
+from skimage import morphology
 
 """
 ## Entropodynamic Percentyle Filter
 """
 class EPF:
-    def __init__(self, hs, ksize, percentile):
+    def __init__(self, hs, ksize, percentile, doNotPassTheFilter = False):
         self.hs = hs
         self.ksize = ksize
         self.percentile = percentile
@@ -24,14 +25,17 @@ class EPF:
 
         self.filter = epf[4]
 
-        self.hs.setFilter(self.filter)
+        if doNotPassTheFilter:
+            print 'DO NOT PASSING THE FILTER TO HS CUBE'
+        else:
+            self.hs.setFilter(self.filter)
 
     def __str__(self):
         return "%s EPF on kernel %s and %i percentile. %i / %i bands filtered." % (
             self.hs,
             self.ksize,
             self.percentile,
-            sum(self.filter),
+            len(self.filter),
             self.hs.bands
         )
 
@@ -46,15 +50,18 @@ class EPF:
 
         return edges3
 
-    def edges2(self, map, ksize, margins = 20):
+    def edges2(self, map, ksize):
         # Establish tensor
         tensor = self.dynamicsTensor(map, ksize)
 
-        # Calculate denivelation
+        # Calculate interquartile range (IQR)
+        '''
         edges2 = np.subtract(
-            np.percentile(tensor, 100 - margins, axis=2),
-            np.percentile(tensor, margins, axis=2)
+            np.percentile(tensor, 49, axis=2),
+            np.percentile(tensor, 51, axis=2)
         )
+        '''
+        edges2 = sp.stats.iqr(tensor, axis = 2)
 
         # Normalization
         a = np.min(edges2)
@@ -128,13 +135,14 @@ class EPF:
         if not source:
             source = self.edges3
 
-        filteredEdges = np.squeeze(source[:,:,np.where(filter)])
+        filteredEdges = source[:,:,filter]
 
         bordersMap = np.max(filteredEdges, 2)
         bordersMap = sp.ndimage.median_filter(
             bordersMap,
             size=(2, 2)
         )
+
         bordersMap = sp.ndimage.grey_dilation(bordersMap, size=(3,3))
         return bordersMap
 
@@ -151,4 +159,6 @@ class EPF:
         edgesMask[lvi] = True
         struct2 = sp.ndimage.generate_binary_structure(2, 1)
         edgesMask = sp.ndimage.binary_dilation(edgesMask, structure = struct2)
+        #edgesMask = morphology.skeletonize(edgesMask)
+        #edgesMask = sp.ndimage.binary_dilation(edgesMask, structure = struct2)
         return edgesMask.astype(bool)
