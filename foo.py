@@ -9,14 +9,13 @@ import matplotlib.patches as patches
 import matplotlib.gridspec as gridspec
 
 imagesDirectory = 'data/hsimages/'
-with open('%s%s' % (imagesDirectory, 'salinas.json')) as data_file:
+with open('%s%s' % (imagesDirectory, 'paviaC.json')) as data_file:
     dictionary = json.load(data_file)
 
 k = (3, 3)
 percentile = 50
 
 hs = hssa.HS(dictionary)
-#ap = hssa.AP(hs, k, percentile, 0, bins = 256, quantization = 4)
 ap = hssa.AP(hs, k, percentile, 0, bins = 256, quantization = 4)
 print ap.epf
 

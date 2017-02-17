@@ -16,6 +16,7 @@ class HS:
     def __init__(self, dictionary):
         # Loading image, ground truth and establishing informations.
         self.image = self.loadMatFromTuple(dictionary['image'])
+        #print np.shape(self.image)
         self.gt = self.loadMatFromTuple(dictionary['gt'])
         self.name = dictionary['name']
         self.classes = dictionary['classes']
@@ -167,6 +168,7 @@ class HS:
     ## Loading from .mat file
     """
     def loadMatFromTuple(self, entry):
+        #print scipy.io.whosmat(entry[0])
         return scipy.io.loadmat(entry[0])[entry[1]]
 
     def prepareReverse(self):
