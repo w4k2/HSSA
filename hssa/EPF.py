@@ -25,10 +25,12 @@ class EPF:
         self.filter = epf[4]
 
     def __str__(self):
-        return "EPF on %s image, k = %s, p = %i" % (
+        return "EPF on %s image, k = %s, p = %i (%i / %i)" % (
             self.hs.name,
             self.ksize,
-            self.percentile
+            self.percentile,
+            sum(self.filter),
+            self.hs.bands
         )
 
     def edges3(self, ksize):
