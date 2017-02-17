@@ -30,6 +30,7 @@ class AP:
 
         # Prepare a rank and visualisation
         self.rank = self.rankCombinations()
+        self.impactVector = [self.rank[0][1] / cmp[1] for cmp in self.rank]
         self.visualisation = self.visualise()
 
     '''
@@ -40,38 +41,21 @@ class AP:
         # First, the colors
         # red
         filterLength = len(self.epf.filter)
-        red = np.mean(self.cube[:,:,xrange(
-            0,
-            1 * filterLength / 3)], axis = 2)
-        channelNames.append('red')
-        # green
-        green = np.mean(self.cube[:,:,xrange(
-            1 * filterLength / 3,
-            2 * filterLength / 3)], axis = 2)
-        channelNames.append('green')
-        # blue
-        blue = np.mean(self.cube[:,:,xrange(
-            2 * filterLength / 3,
-            3 * filterLength / 3)], axis = 2)
-        channelNames.append('blue')
         rgb = np.dstack((
-            red,
-            green,
-            blue
-        ))
+            np.mean(self.cube[:,:,xrange(
+                0,
+                1 * filterLength / 3)], axis = 2),
+            np.mean(self.cube[:,:,xrange(
+                1 * filterLength / 3,
+                2 * filterLength / 3)], axis = 2),
+            np.mean(self.cube[:,:,xrange(
+                2 * filterLength / 3,
+                3 * filterLength / 3)], axis = 2)))
+        channelNames.extend(['red', 'green', 'blue'])
 
         # Later, HSV conversion
         hsv = plt.colors.rgb_to_hsv(np.multiply(rgb, -255))
-
-        # hue
-        hue = hsv[:,:,0]
-        channelNames.append('hue')
-        # saturation
-        saturation = hsv[:,:,1]
-        channelNames.append('saturation')
-        # brightness
-        brightness = hsv[:,:,2]
-        channelNames.append('brightness')
+        channelNames.extend(['hue', 'saturation', 'brightness'])
 
         #quartiles
         q1 = np.percentile(self.cube, 25, axis = 2)
@@ -177,19 +161,15 @@ class AP:
     def visualise(self, limit = None):
         if not limit:
             limit = int(len(self.rank) / 10)
-        print 'bziium'
-        print limit
-        image = self.channels[:,:,self.rank[0][0]]
+        #print 'bziium'
+        image = self.channel(self.rank[0][0])
         for i in xrange(1,limit):
             if i >= len(self.rank):
                 break
-            impact = self.rank[0][1] / self.rank[i][1]
-            image += impact * self.channels[:,:,self.rank[i][0]]
+            image += self.impactVector[i] * self.channel(self.rank[i][0])
         normA = np.min(image)
-        normB = np.max(image)
-        normB -= normA
-        image = (image - normA) / normB
-        return image
+        normB = np.max(image) - normA
+        return (image - normA) / normB
 
     def __str__(self):
         return "%s AP on %i bins and %i quants." % (

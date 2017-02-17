@@ -146,7 +146,6 @@ class HS:
         if self.filter is None:
             return np.copy(image)
         else:
-            print type(self.filter)
             return np.copy(image[:,:,self.filter])
 
     """
