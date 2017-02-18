@@ -18,7 +18,7 @@ print ap
 
 mask = ap.epf.bordersMask()
 
-plt.figure(figsize=(10, 15))
+plt.figure(figsize=(10, 20))
 colors = ['#CC2222', '#22CC22', '#2222CC']
 
 for idx in xrange(np.shape(ap.channels)[2]):
@@ -75,7 +75,7 @@ for idx in xrange(0, np.shape(ap.channels)[2] / 5):
     plt.title(ap.colorIndex(colb))
 
 # Winner
-plt.subplot(9,5,1)
+plt.subplot(9,5,6)
 a = [r[1] for r in ap.rank]
 plt.plot(a)
 winner = 0
@@ -83,19 +83,15 @@ loser = -1
 plt.title(winner)
 print ap.rank[winner]
 
-plt.subplot(9,5,2)
+plt.subplot(9,5,1)
 image = ap.channels[:,:,ap.rank[winner][0]]
 plt.imshow(image); plt.axis('off');
 plt.title('BEST')
 
-plt.subplot(9,5,7)
+plt.subplot(9,5,2)
 image = ap.channels[:,:,ap.rank[loser][0]]
 plt.imshow(image); plt.axis('off');
 plt.title('WORST')
-
-plt.subplot(9,5,6)
-plt.imshow(mask, cmap='gray'); plt.axis('off');
-
 
 plt.tight_layout(pad=0, w_pad=0, h_pad=0)
 plt.savefig('handy/foo.png')
@@ -116,7 +112,7 @@ rows = 8
 step = 4
 
 
-cols = 5
+cols = 7
 rows = 2
 step = 1
 

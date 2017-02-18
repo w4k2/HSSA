@@ -19,7 +19,7 @@ class HSSA:
     """
     ## Initialization
     """
-    def __init__(self, hs, threshold, jThreshold, limit=99, points=20, stopAutomerge=False, toFilter=True):
+    def __init__(self, hs, threshold, jThreshold, limit=99, points=20, stopAutomerge=False, toFilter=True, percentyle = 75):
         """
         Assign:
 
@@ -32,6 +32,7 @@ class HSSA:
         self.jThreshold = jThreshold
         self.limit = limit
         self.points = points
+        self.percentyle = percentyle
 
         self.stopAutomerge = stopAutomerge
 
@@ -56,6 +57,10 @@ class HSSA:
         """
         Calculate EPF
         """
+        # Establish EPF to gather filtered cube and establish channels
+        self.epf = EPF(hs, (2, 2), self.percentyle)
+
+        '''
         self.filter = None
         if toFilter:
             epf = EPF(self.hs, (2, 2), 50)
@@ -63,6 +68,7 @@ class HSSA:
             self.hs.setFilter(self.filter)
             #print self.filter
             #print np.shape(self.filter)
+        '''
 
 
     """
@@ -193,9 +199,14 @@ class HSSA:
     ### Status string
     """
     def __str__(self):
-        return "%s %s, i = %i, %i het, %i hom, s = %i" % (
+        return "%s HSSA. (%s)" % (
+            self.epf,
+            self.status()
+        )
+
+    def status(self):
+        return "%s %i iteration with %i:%i hetero to homo ratio and %i segments" % (
             "complete" if self.isComplete else "in progress",
-            self.hs.name,
             self.iteration,
             len(self.heterogenous),
             len(self.homogenous),

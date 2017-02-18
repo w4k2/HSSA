@@ -3,11 +3,13 @@ import collections as cl
 import matplotlib as plt
 import itertools as it
 import numpy as np
+import colorsys as cs
+from skimage import io, color
 
 from EPF import *
 
 class AP:
-    def __init__(self, hs, k = (3, 3), percentile = 50, bins = 256, quants = 4):
+    def __init__(self, hs, k = (3, 3), percentile = 80, bins = 256, quants = 4):
         # Assign AP parameters
         self.hs = hs                        # hyperspectral image
         self.bins = bins                    # number of range bins
@@ -21,6 +23,7 @@ class AP:
         self.epf = EPF(hs, k, percentile)
         self.cube = hs.cube()
         (self.channels, self.channelNames) = self.computeChannels()
+        self.rawChannels = np.copy(self.channels)
 
         # Normalize channels
         self.normalizeChannels()
@@ -41,6 +44,7 @@ class AP:
         # First, the colors
         # red
         filterLength = len(self.epf.filter)
+
         rgb = np.dstack((
             np.mean(self.cube[:,:,xrange(
                 0,
@@ -53,20 +57,9 @@ class AP:
                 3 * filterLength / 3)], axis = 2)))
         channelNames.extend(['red', 'green', 'blue'])
 
-        # Later, HSV conversion
-        hsv = (np.copy(rgb) - np.amin(rgb)) / (np.amax(rgb) - np.amin(rgb))
-        #hsv = np.multiply(hsv, 255)
-        #hsv = hsv.astype(int)
-        print np.amin(hsv)
-        print np.amax(hsv)
-        hsv = plt.colors.rgb_to_hsv(hsv)
-        print np.amin(hsv[:,:,0])
-        print np.amax(hsv[:,:,0])
-        print np.amin(hsv[:,:,1])
-        print np.amax(hsv[:,:,1])
-        print np.amin(hsv[:,:,2])
-        print np.amax(hsv[:,:,2])
-        channelNames.extend(['hue', 'saturation', 'brightness'])
+        # Later, CIELab conversion
+        cie = color.rgb2lab(rgb)
+        channelNames.extend(['CIE X', 'CIE Y', 'CIE Z'])
 
         #quartiles
         q1 = np.percentile(self.cube, 25, axis = 2)
@@ -94,7 +87,7 @@ class AP:
 
         # Collecting
         channels = np.dstack((
-            rgb, hsv,
+            rgb, cie,
             q1, median, q3,
             interquartileRange,
             minimum,
@@ -124,7 +117,7 @@ class AP:
             channel[channel < 0] = 0
             channel = sp.ndimage.median_filter(
                 channel,
-                size=(3, 3)
+                size=(5, 5)
             )
             self.channels[:,:,idx] = channel
 
@@ -178,9 +171,23 @@ class AP:
             if i >= len(self.rank):
                 break
             image += self.impactVector[i] * self.channel(self.rank[i][0])
+        # Normalize
         normA = np.min(image)
         normB = np.max(image) - normA
-        return (image - normA) / normB
+        image = (image - normA) / normB
+        hsv = plt.colors.rgb_to_hsv(image)
+
+        # Obtain V
+        origin_v = hsv[:,:,2]
+        v = np.mean(self.cube, axis = 2)
+        v = sp.ndimage.median_filter(
+            v,
+            size=(2, 2)
+        )
+        v = (origin_v + v) / 2
+        hsv[:,:,2] = v
+        image = plt.colors.hsv_to_rgb(hsv)
+        return image
 
     def __str__(self):
         return "%s AP on %i bins and %i quants." % (

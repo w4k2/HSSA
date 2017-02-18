@@ -40,7 +40,7 @@ class HS:
             self.normB.append(maximum)
 
         self.normB = map(operator.sub, self.normB, self.normA)
-        self.normA = np.asarray(self.normB)
+        self.normA = np.asarray(self.normA)
         self.normB = np.asarray(self.normB)
 
         # Searching for maximum value
@@ -203,8 +203,9 @@ class HS:
     ## Be verbose, man
     """
     def __str__(self):
-        return '%s image, %i classes, %i samples of %i bands.' % (
+        return '%s image, %i classes, %i samples on %i bands%s.' % (
             self.name,
             len(self.classes),
             self.rows * self.cols,
-            self.bands)
+            self.bands,
+            "" if self.filter is None else " (%i active)" % len(self.filter))
