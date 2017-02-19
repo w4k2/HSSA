@@ -10,4 +10,4 @@ codeclimate-test-reporter
 scipy
 matplotlib
 sklearn
-skimage
+scikit-image
