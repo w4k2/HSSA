@@ -1,5 +1,1 @@
-<?xml version="1.0" encoding="UTF-8"?><testsuite name="nosetests" tests="1" errors="0" failures="0" skip="0"><testcase classname="test" name="test_dumb_hssa" time="2.783"><system-out><![CDATA[[ 21  24  26  27  28  30  32  33  44  46  82  83  84  85  86  87  88  89
-  90  91  92  93  94 105 109 112 113 117 126 128 131 139 140 141 142 143
- 144 145 146 147 148 149 156 158 170 172 177 180 183 184 185 187 188 190
- 207 214 223]
-]]></system-out></testcase></testsuite>
+<?xml version="1.0" encoding="UTF-8"?><testsuite name="nosetests" tests="1" errors="0" failures="0" skip="0"><testcase classname="test" name="test_dumb_hssa" time="1.381"></testcase></testsuite>
