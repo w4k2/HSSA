@@ -162,7 +162,7 @@ class AP:
     '''
     Decorators
     '''
-    def visualise(self, limit = None):
+    def visualise(self, limit = None, useImpact = True):
         if not limit:
             limit = int(len(self.rank) / 10)
         #print 'bziium'
@@ -170,7 +170,11 @@ class AP:
         for i in xrange(1,limit):
             if i >= len(self.rank):
                 break
-            image += self.impactVector[i] * self.channel(self.rank[i][0])
+            if useImpact:
+                image += self.impactVector[i] * self.channel(self.rank[i][0])
+            else:
+                image += self.channel(self.rank[i][0])
+
         # Normalize
         normA = np.min(image)
         normB = np.max(image) - normA

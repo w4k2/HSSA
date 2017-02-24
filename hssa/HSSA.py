@@ -70,7 +70,6 @@ class HSSA:
             #print np.shape(self.filter)
         '''
 
-
     """
     ## Single iteration
     """

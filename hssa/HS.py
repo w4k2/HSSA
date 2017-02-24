@@ -5,6 +5,8 @@ import numpy as np
 from scipy import ndimage
 import weles
 import operator
+import itertools as it
+import random
 
 """
 A class to store and to use hypersectral image.
@@ -179,7 +181,8 @@ class HS:
     """
     ## Exporting Weles dataset
     """
-    def dataset(self):
+    def dataset(self, resample = 5000):
+        print 'HS -> Dataset, resampled %i' % resample
         dataset = weles.Dataset()
         db_name = self.name
         source_samples = []
@@ -191,6 +194,10 @@ class HS:
                 if not sample.label in self.reverseClasses:
                     self.reverseClasses.update({sample.label: len(self.reverseClasses)})
                 sample.label = self.reverseClasses[sample.label]
+
+        source_samples = list(map(lambda _: random.choice(source_samples), range(resample)))
+        #print len(newlist)
+        print 'Filling'
         dataset.fill(
             db_name,
             source_samples,
