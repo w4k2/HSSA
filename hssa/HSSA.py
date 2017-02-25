@@ -58,7 +58,8 @@ class HSSA:
         Calculate EPF
         """
         # Establish EPF to gather filtered cube and establish channels
-        self.epf = EPF(hs, (2, 2), self.percentyle)
+        if toFilter:
+            self.epf = EPF(hs, (2, 2), self.percentyle)
 
         '''
         self.filter = None

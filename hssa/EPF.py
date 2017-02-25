@@ -39,6 +39,9 @@ class EPF:
             self.hs.bands
         )
 
+    def scale(self):
+        return float(len(self.filter)) / float(self.hs.bands)
+
     def edges3(self, ksize):
         edges3 = np.zeros(np.shape(self.hs.image))
         for sid in xrange(self.hs.bands):
