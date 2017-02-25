@@ -30,6 +30,14 @@ class EPF:
         else:
             self.hs.setFilter(self.filter)
 
+    @classmethod
+    def cfgTag(cls, hs, ksize, percentile):
+        return 'epf_im_%s_ks_%s_p_%i_b1' % (
+            hs.name,
+            ksize,
+            percentile
+        )
+
     def __str__(self):
         return "%s EPF on kernel %s and %i percentile. %i / %i bands filtered." % (
             self.hs,
