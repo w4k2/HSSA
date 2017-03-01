@@ -156,6 +156,9 @@ class HS:
     def label(self, location):
         return int(np.copy(self.gt[location]))
 
+    def datasetLabel(self, location):
+        return self.reverseClasses[self.label(location)]
+
     """
     ### Getting slice
     """
@@ -191,11 +194,12 @@ class HS:
             for y in xrange(self.cols):
                 sample = self.sample((x, y))
                 source_samples.append(sample)
-                if not sample.label in self.reverseClasses:
-                    self.reverseClasses.update({sample.label: len(self.reverseClasses)})
+                #if not sample.label in self.reverseClasses:
+                #    self.reverseClasses.update({sample.label: len(self.reverseClasses)})
                 sample.label = self.reverseClasses[sample.label]
 
         source_samples = list(map(lambda _: random.choice(source_samples), range(resample)))
+        source_samples.append(self.sample((0,0)))
         #print len(newlist)
         print 'Filling'
         dataset.fill(
@@ -203,6 +207,12 @@ class HS:
             source_samples,
             self.reverseClasses
         )
+
+        print len(source_samples)
+        a = source_samples[-1]
+        print len(a.getFeatures())
+        print a.getFeatures()[4:8]
+        print a.label
 
         return dataset
 

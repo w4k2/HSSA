@@ -19,7 +19,7 @@ class HSSA:
     """
     ## Initialization
     """
-    def __init__(self, hs, threshold, jThreshold, limit=99, points=20, stopAutomerge=False, toFilter=True, percentyle = 75):
+    def __init__(self, hs, threshold, jThreshold, limit=99, points=20, stopAutomerge=False, toFilter=True, percentyle = 95):
         """
         Assign:
 
@@ -59,7 +59,11 @@ class HSSA:
         """
         # Establish EPF to gather filtered cube and establish channels
         if toFilter:
-            self.epf = EPF(hs, (2, 2), self.percentyle)
+            self.epf = EPF(
+                hs,
+                (2, 2),
+                self.percentyle
+            )
 
         '''
         self.filter = None
@@ -369,11 +373,12 @@ class HSSA:
         # print analysis
         # print "%i classes detected" % len(self.classes)
 
-    def cfgTag(self):
+    @classmethod
+    def cfgTag(cls, hs, threshold, jthreshold, limit, points, percentyle):
         return 'hssa_im_%s_ht_%.3f_jt_%.3f_l_%i_p_%i' % (
-            self.hs.name,
-            self.threshold,
-            self.jThreshold,
-            self.limit,
-            self.points
+            hs.name,
+            threshold,
+            jthreshold,
+            limit,
+            points
         )
