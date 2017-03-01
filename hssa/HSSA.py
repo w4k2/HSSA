@@ -146,8 +146,6 @@ class HSSA:
                 for frame in collection:
                     signature = frame.signature
                     buffer.append(signature)
-                    #for sample in samples:
-                    #    print "\t- %s" % sample.features[:3]
                 signature = np.mean(buffer, axis=0)
                 sample = weles.Sample(
                     signature,
@@ -156,21 +154,15 @@ class HSSA:
                 train.append(sample)
             # One per frame
             elif c == 1:
-                #buffer = []
                 for frame in collection:
-                    #samples = frame.samples(3)
                     signature = frame.signature # one
                     sample = weles.Sample(
                         signature,
                         self.hs.reverseClasses[label]
                         )
                     train.append(sample)
-                    #print "\tS=%s:" % signature[:3]
-                    #buffer.append(signature)
-                    #for sample in samples:
-                    #    print "\t- %s" % sample.features[:3]
+            # n per frame
             else:
-                #buffer = []
                 for frame in collection:
                     signatures = frame.signatures(c)
                     signature = frame.signature # one
@@ -374,11 +366,12 @@ class HSSA:
         # print "%i classes detected" % len(self.classes)
 
     @classmethod
-    def cfgTag(cls, hs, threshold, jthreshold, limit, points, percentyle):
-        return 'hssa_im_%s_ht_%.3f_jt_%.3f_l_%i_p_%i' % (
+    def cfgTag(cls, hs, threshold, jthreshold, limit, points, percentyle, tt):
+        return 'hssa_im_%s_ht_%.3f_jt_%.3f_l_%i_p_%i_tt_%i' % (
             hs.name,
             threshold,
             jthreshold,
             limit,
-            points
+            points,
+            tt
         )
