@@ -10,7 +10,7 @@ with open('LICENSE') as f:
 
 setup(
     name='hssa',
-    version='0.4.1',
+    version='1.0',
     description='Hyperspectral Segmentation Algorithm',
     long_description=readme,
     author='Paweł Ksieniewicz',
