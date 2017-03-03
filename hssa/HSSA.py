@@ -19,7 +19,7 @@ class HSSA:
     """
     ## Initialization
     """
-    def __init__(self, hs, threshold, jThreshold, limit=99, points=20, stopAutomerge=False, toFilter=True, percentyle = 95):
+    def __init__(self, hs, threshold, jThreshold, limit=99, points=9, stopAutomerge=False, toFilter=True, percentyle = 95):
         """
         Assign:
 
@@ -366,12 +366,13 @@ class HSSA:
         # print "%i classes detected" % len(self.classes)
 
     @classmethod
-    def cfgTag(cls, hs, threshold, jthreshold, limit, points, percentyle, tt):
-        return 'hssa_im_%s_ht_%.3f_jt_%.3f_l_%i_p_%i_tt_%i' % (
+    def cfgTag(cls, hs, threshold, jthreshold, limit, points = 9, percentyle = 95, tt = 0):
+        return 'hssa_im_%s_ht_%.3f_jt_%.3f_l_%i_p_%i_prc_%itt_%i' % (
             hs.name,
             threshold,
             jthreshold,
             limit,
             points,
+            percentyle,
             tt
         )

@@ -22,4 +22,4 @@ docs:
 foo:
 	./foo.py
 
-.PHONY: publish test docs
+.PHONY: publish test docs diagrams

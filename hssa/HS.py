@@ -194,8 +194,8 @@ class HS:
             for y in xrange(self.cols):
                 sample = self.sample((x, y))
                 source_samples.append(sample)
-                #if not sample.label in self.reverseClasses:
-                #    self.reverseClasses.update({sample.label: len(self.reverseClasses)})
+                if not sample.label in self.reverseClasses:
+                    self.reverseClasses.update({sample.label: len(self.reverseClasses)})
                 sample.label = self.reverseClasses[sample.label]
 
         source_samples = list(map(lambda _: random.choice(source_samples), range(resample)))
