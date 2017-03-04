@@ -185,8 +185,8 @@ class AP:
                 self.histograms[tup[1]][bin],
                 self.histograms[tup[2]][bin]]) for bin in xrange(self.bins)]))
         factor = len(list((a[x] for x in a if a[x] > limit )))
-
-        return np.absolute(self.ncc - (np.mean(interquartileRange) * float(factor)))
+        nci = np.absolute(self.ncc - (np.mean(interquartileRange) * float(factor)))
+        return nci
 
     '''
     Operators
