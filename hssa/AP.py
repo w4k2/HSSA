@@ -6,6 +6,7 @@ import numpy as np
 import re
 import colorsys as cs
 import csv
+import random
 from skimage import io, color
 
 from EPF import *
@@ -38,15 +39,19 @@ class AP:
         self.impactVector = [self.rank[0][1] / cmp[1] for cmp in self.rank]
         self.visualisation = self.visualise()
 
-    def export(self, filename):
+    def export(self, filename, samples = 5000):
         # Open file
         with open('%s.csv' % filename, 'wb') as csvfile:
             writer = csv.writer(csvfile, delimiter=',')
+            passer = random.sample(range(self.hs.rows * self.hs.cols), samples)
+            i = 0
             for x in xrange(self.hs.rows):
                 for y in xrange(self.hs.cols):
-                    features = self.channels[x,y]
-                    label = self.hs.label((x,y))
-                    writer.writerow(list(features) + [label])
+                    if i in passer:
+                        features = self.channels[x,y]
+                        label = self.hs.label((x,y))
+                        writer.writerow(list(features) + [label])
+                    i += 1
 
     @classmethod
     def cfgTag(cls, hs, k = (3, 3), percentile = 80, bins = 256, quants = 4):
