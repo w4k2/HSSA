@@ -53,6 +53,20 @@ class AP:
                         writer.writerow(list(features) + [label])
                     i += 1
 
+    def rawExport(self, filename, samples = 5000):
+        # Open file
+        with open('%s_raw.csv' % filename, 'wb') as csvfile:
+            writer = csv.writer(csvfile, delimiter=',')
+            passer = random.sample(range(self.hs.rows * self.hs.cols), samples)
+            i = 0
+            for x in xrange(self.hs.rows):
+                for y in xrange(self.hs.cols):
+                    if i in passer:
+                        features = self.rawChannels[x,y]
+                        label = self.hs.label((x,y))
+                        writer.writerow(list(features) + [label])
+                    i += 1
+
     @classmethod
     def cfgTag(cls, hs, k = (3, 3), percentile = 80, bins = 256, quants = 4):
         return 'ap_im_%s_k_%s_p_%i_b_%i_q_%i' % (
