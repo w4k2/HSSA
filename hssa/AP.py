@@ -3,7 +3,9 @@ import collections as cl
 import matplotlib as plt
 import itertools as it
 import numpy as np
+import re
 import colorsys as cs
+import csv
 from skimage import io, color
 
 from EPF import *
@@ -35,6 +37,26 @@ class AP:
         self.rank = self.rankCombinations()
         self.impactVector = [self.rank[0][1] / cmp[1] for cmp in self.rank]
         self.visualisation = self.visualise()
+
+    def export(self, filename):
+        # Open file
+        with open('%s.csv' % filename, 'wb') as csvfile:
+            writer = csv.writer(csvfile, delimiter=',')
+            for x in xrange(self.hs.rows):
+                for y in xrange(self.hs.cols):
+                    features = self.channels[x,y]
+                    label = self.hs.label((x,y))
+                    writer.writerow(list(features) + [label])
+
+    @classmethod
+    def cfgTag(cls, hs, k = (3, 3), percentile = 80, bins = 256, quants = 4):
+        return 'ap_im_%s_k_%s_p_%i_b_%i_q_%i' % (
+            re.sub('[ ]', '_', hs.name),
+            re.sub('[(), ]', '', str(k)),
+            percentile,
+            bins,
+            quants
+        )
 
     '''
     Calculators
