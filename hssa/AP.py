@@ -12,11 +12,12 @@ from skimage import io, color
 from EPF import *
 
 class AP:
-    def __init__(self, hs, k = (3, 3), percentile = 80, bins = 256, quants = 4):
+    def __init__(self, hs, k = (3, 3), percentile = 80, bins = 256, quants = 4, ncc = .1):
         # Assign AP parameters
         self.hs = hs                        # hyperspectral image
         self.bins = bins                    # number of range bins
-        self.quants = quants    # number of color quants
+        self.quants = quants                # number of color quants
+        self.ncc = .1                       # natural color constant
 
         # Assign EPF parameters
         self.k = k                          # kernel size
@@ -185,7 +186,7 @@ class AP:
                 self.histograms[tup[2]][bin]]) for bin in xrange(self.bins)]))
         factor = len(list((a[x] for x in a if a[x] > limit )))
 
-        return np.absolute(.1 - (np.mean(interquartileRange) * float(factor)))
+        return np.absolute(self.ncc - (np.mean(interquartileRange) * float(factor)))
 
     '''
     Operators
