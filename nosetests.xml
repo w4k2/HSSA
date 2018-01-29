@@ -1,1 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?><testsuite name="nosetests" tests="1" errors="0" failures="0" skip="0"><testcase classname="test" name="test_dumb_hssa" time="1.828"></testcase></testsuite>
+<?xml version="1.0" encoding="UTF-8"?><testsuite name="nosetests" tests="1" errors="0" failures="1" skip="0"><testcase classname="test" name="test_loading" time="0.061"><failure type="exceptions.AssertionError" message=""><![CDATA[Traceback (most recent call last):
+  File "/Users/xehivs/.pyenv/versions/2.7.13/lib/python2.7/unittest/case.py", line 329, in run
+    testMethod()
+  File "/Users/xehivs/.pyenv/versions/2.7.13/lib/python2.7/site-packages/nose/case.py", line 197, in runTest
+    self.test(*self.arg)
+  File "/Users/xehivs/dev/science/hssa/tests/test.py", line 27, in test_loading
+    assert 'Salinas A image, 7 classes, 7138 samples of 224 bands' == str(hs)
+AssertionError
+]]></failure><system-out><![CDATA[CHUJCHUJCHUJ
+Salinas A image, 7 classes, 7138 samples on 224 bands.
+CHUJCHUJCHUJ2
+]]></system-out></testcase></testsuite>

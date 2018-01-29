@@ -17,13 +17,14 @@ def loadImage():
 
     return hssa.HS(dictionary)
 
-'''
 def test_loading():
     """Is image loading?"""
     hs = loadImage()
+    print str(hs)
     # assert 'Salinas image, 7 classes, 111104 samples of 204 bands' == str(hs)
     assert 'Salinas A image, 7 classes, 7138 samples of 224 bands' == str(hs)
 
+'''
 
 def test_signature():
     """Do we receive signatures?"""

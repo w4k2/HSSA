@@ -80,6 +80,7 @@ class HS:
 
     def signaturesPNG(self, filename):
         signatures = self.signatures()
+        realBands = signatures[0].shape[0]
 
         # Plot size
         plt.figure(figsize=(11, 5.5))
@@ -93,7 +94,7 @@ class HS:
         # Limit the range of the plot to only where the data is.
         # Avoid unnecessary whitespace.
         plt.ylim(0, 1)
-        plt.xlim(0, self.bands)
+        plt.xlim(0, realBands)
 
         # Make sure your axis ticks are large enough to be easily read.
         # You don't want your viewers squinting to read your plot.
@@ -104,7 +105,7 @@ class HS:
         # the axis ticks. Make sure that the lines are light and small so they
         # don't obscure the primary data lines.
         for y in np.arange(.1, .91, .1):
-            plt.plot(range(self.bands), [y] * len(range(self.bands)), "--", lw=0.5, color="black", alpha=0.3)
+            plt.plot(range(realBands), [y] * len(range(realBands)), "--", lw=0.5, color="black", alpha=0.3)
 
         # Remove the tick marks; they are unnecessary with the tick lines we just plotted.
         plt.tick_params(axis="both", which="both", bottom="on", top="off",
@@ -113,7 +114,7 @@ class HS:
         # Actually plot signatures
         for item in signatures:
             line, = plt.plot(
-                xrange(self.bands),
+                xrange(realBands),
                 signatures[item],
                 linewidth = 1 )
             line.set_antialiased(True)
