@@ -12,19 +12,10 @@ def endcolor():
     return '\033[0m'
 
 def loadImage():
-    with open('%s%s' % (imagesDirectory, 'salinasA.json')) as data_file:
+    with open('%s%s' % (imagesDirectory, 'salinas.json')) as data_file:
         dictionary = json.load(data_file)
 
     return hssa.HS(dictionary)
-
-def test_loading():
-    """Is image loading?"""
-    hs = loadImage()
-    print str(hs)
-    # assert 'Salinas image, 7 classes, 111104 samples of 204 bands' == str(hs)
-    assert 'Salinas A image, 7 classes, 7138 samples of 224 bands' == str(hs)
-
-'''
 
 def test_signature():
     """Do we receive signatures?"""
@@ -89,7 +80,6 @@ def test_is_dividing_working():
             thirdStageLocations.append(nFrame.location)
     assert sorted(thirdStageLocations) == list(xrange(0, 64))
 
-'''
 def test_dumb_hssa():
     """Is HSSA working?"""
     hs = loadImage()
@@ -102,7 +92,7 @@ def test_dumb_hssa():
 
     assert len(sgm.homogenous) > 0 and len(sgm.heterogenous) == 0
 
-'''
+
 def test_limit_hssa():
     """Is HSSA working with limits?"""
     hs = loadImage()
@@ -110,12 +100,8 @@ def test_limit_hssa():
     jthreshold = .98
     limit = 4
     sgm = hssa.HSSA(hs, threshold, jthreshold, limit)
-    print 'TRY'
-    print 'Config tag: %s' % sgm.cfgTag()
     sgm.process()
-    print 'Config tag: %s' % sgm.cfgTag()
-
-    # assert len(sgm.homogenous) > 0 and len(sgm.heterogenous) > 0
+    assert len(sgm.homogenous) > 0 and len(sgm.heterogenous) == 0
 
 
 def test_hssa_final():
@@ -125,15 +111,10 @@ def test_hssa_final():
     jthreshold = .995
     limit = 6
     sgm = hssa.HSSA(hs, threshold, jthreshold, limit)
-    print 'Config tag: %s' % sgm.cfgTag()
     sgm.process()
     sgm.post()
     representation = sgm.representation()
     print len(representation)
-    #myfile = open('result.csv', 'wb')
-    #wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
-    #for row in representation:
-    #    wr.writerow(row)
 
 def test_weles_pass():
     """Passing image as dataset to Weles!"""
@@ -148,4 +129,3 @@ def test_weles_pass():
     print clf
     clf = weles.sklMLP(dataset, configuration).quickLoop()
     print clf
-'''

@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?><testsuite name="nosetests" tests="1" errors="0" failures="1" skip="0"><testcase classname="test" name="test_loading" time="0.061"><failure type="exceptions.AssertionError" message=""><![CDATA[Traceback (most recent call last):
-  File "/Users/xehivs/.pyenv/versions/2.7.13/lib/python2.7/unittest/case.py", line 329, in run
-    testMethod()
-  File "/Users/xehivs/.pyenv/versions/2.7.13/lib/python2.7/site-packages/nose/case.py", line 197, in runTest
-    self.test(*self.arg)
-  File "/Users/xehivs/dev/science/hssa/tests/test.py", line 27, in test_loading
-    assert 'Salinas A image, 7 classes, 7138 samples of 224 bands' == str(hs)
-AssertionError
-]]></failure><system-out><![CDATA[CHUJCHUJCHUJ
-Salinas A image, 7 classes, 7138 samples on 224 bands.
-CHUJCHUJCHUJ2
+<?xml version="1.0" encoding="UTF-8"?><testsuite name="nosetests" tests="10" errors="0" failures="0" skip="0"><testcase classname="test" name="test_signature" time="1.127"></testcase><testcase classname="test" name="test_slice" time="0.983"></testcase><testcase classname="test" name="test_hssa_init" time="7.871"></testcase><testcase classname="test" name="test_hssa_frame_signature" time="7.514"><system-out><![CDATA[F0|L0|S-1|L0|H0.910
+]]></system-out></testcase><testcase classname="test" name="test_hssa_homogeneity_measure" time="7.997"></testcase><testcase classname="test" name="test_is_dividing_working" time="7.504"></testcase><testcase classname="test" name="test_dumb_hssa" time="137.578"></testcase><testcase classname="test" name="test_limit_hssa" time="7.300"></testcase><testcase classname="test" name="test_hssa_final" time="9.298"><system-out><![CDATA[60
+]]></system-out></testcase><testcase classname="test" name="test_weles_pass" time="45.434"><system-out><![CDATA[HS -> Dataset, resampled 5000
+Filling
+5001
+224
+[0.24199921 0.23646569 0.22080717 0.21102749]
+0
+{'acc': 0.9719232515400561, 'wacc': [0.9717058823529412, 0.970095711366276, 0.9728303218313069, 0.9724186600408722, 0.9725656821088845], 'wbac': [0.8047010811488863, 0.7819400083931203, 0.8113785338958948, 0.8045323703930515, 0.7922001309003451], 'bac': 0.7989504249462595}
+{'acc': 0.9723819574518136, 'wacc': [0.9716470588235294, 0.9710366526015555, 0.9753002925739154, 0.9730655571401268, 0.9708602261199406], 'wbac': [0.8292294563318475, 0.8115348053881968, 0.8683160826470427, 0.8396601129461626, 0.8188529488358626], 'bac': 0.8335186812298223}
+{'acc': 0.9467577973153769, 'wacc': [0.9485588235294118, 0.9457194524898187, 0.9490715556405016, 0.9430142464383904, 0.9474249084787627], 'wbac': [0.5385231243996583, 0.534165833550758, 0.5503251653959014, 0.5261055315210887, 0.5354364332740116], 'bac': 0.5369112176282835}
 ]]></system-out></testcase></testsuite>
